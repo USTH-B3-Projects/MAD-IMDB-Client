@@ -19,7 +19,11 @@ _based on standard SDLC Model_
 - Settings
 - API integration.
 
-**ATTENTION:** NO USER ACCOUNT
+**ATTENTION - OUT OF SCOPE:** 
+- User Authentication
+- User Accounts
+- Cloud Synchronization
+- Custom Backend
 
 ---
 ## Phase 2. Requirement Analysis
@@ -51,12 +55,12 @@ _based on standard SDLC Model_
 - Use Case Description:
     | Field | Description |
     | --- | --- |
-    | ID, Name | UC-01: Browse Movies |
+    | ID, Name | UC-01: Browse Featured Movies |
     | Actor | Guest User |
     | Precondition | App is launched, user can access the Home screen |
-    | Postcondition | The available movies are displayed with their posters, titles, and ratings |
-    | Main Flow | 1. User opens the Home screen.<br>2. System retrieves the movie list from the API.<br>3. System displays the available movies.<br>4. User scrolls through the movie list.<br>5. System displays additional movies as the user browses, if available. |
-    | Alternative Flow | Empty Movie List: The API returns an empty list.<br>→ The system displays a message such as "No movies available." | 
+    | Postcondition | The available featured movies are displayed with their posters, titles, and ratings. |
+    | Main Flow | 1. User opens the Home screen.<br>2. System retrieves the featured movie list from the API.<br>3. System displays the available movies.<br>4. User scrolls through the movie list. |
+    | Alternative Flow | No featured Movies available: The system displays a message "No movies available." | 
 
     | Field | Description |
     | --- | --- |
@@ -80,7 +84,7 @@ _based on standard SDLC Model_
     | --- | --- |
     | ID, Name | UC-04: Manage Favorites |
     | Actor | Guest User |
-    | Precondition | App is launched, user can access movie details or the Favorites screen. |
+    | Precondition | App is launched, user can access Movie Details or the Favorites screen. |
     | Postcondition | The Favorites list is updated and saved locally. |
     | Main Flow | 1. User selects a movie from the Home screen or search results.<br>2. System displays the Movie Details screen.<br>3. User adds the selected movie to Favorites.<br>4. System saves the movie to the Favorites list.<br>5. System displays confirmation message.<br>6. User opens the favorites screen.<br>7. System displays the saved movies. |
     | Alternative Flow | **Remove Favorite:** User removes a movie from Favorites. System updates the list<br>**Movie already in Favorites:** System prevents duplicate and displays duplicate notificatio message<br>**Empty Favorites list:** System displays "No favorite movies yet". |
@@ -125,7 +129,7 @@ Using MVVM (Model - View - ViewModel) model + Repository Pattern: [MVVM](mvv-mod
 - **Repository:** Data access management, provide an abstraction between ViewModel and data sources.
 | Data Source | Role |
 |---|---|
-| Movie API (TMDB) | GET movie list, search, details |
+| Movie API (OMDb) | GET movie list, search, details |
 | Database | Store and retrieve favorite movies |
 
 - **Data Flow:** View → ViewModel → Repository → API / Local Database
@@ -137,4 +141,32 @@ Using MVVM (Model - View - ViewModel) model + Repository Pattern: [MVVM](mvv-mod
 ### 3.3. UI/UX Design
 _na_
 
-### 3.4. API Design - Use TMDB API
+### 3.4. API Design
+#### a. API Endpoints
+- **[OMDb API](https://www.omdbapi.com):** Provides Movie Details
+- **Authentication:** API Key
+- **Response Format:** JSON
+
+| Use Case | Request | Data Source |
+|---|---|---|
+| UC-01 Browse Featured Movies | `GET ?i={imdbID}` for each movie | OMDb |
+| UC-02 Search Movies | `GET ?s={title}&type=movie` | OMDb |
+| UC-03 View Movie Details | `GET ?i={imdbID}&plot=full` | OMDb |
+| UC-04 Manage Favorites | Insert / Select / Delete | Room Database |
+| UC-05 View Settings | Read / Write Preferences | SharedPreferences |
+
+#### b. API Request & Response Design
+| Use Case | Response |
+| --- | --- |
+| UC-01 | Title, Year, Poster, imdbRating, imdbID |
+| UC-02 | Title, Year, imdbID, Type, Poster |
+| UC-03 | Title, Year, imdbID, Poster, Genre, imdbRating, Plot, Actors, Runtime, Director |
+
+### 3.5. Data Design
+| Model | Fields | Purpose |
+|---|---|---|
+| Movie | imdbID, Title, Year, Type, Poster | Browse/Search Movies |
+| MovieDetails | imdbID, Title, Year, Poster, Genre, imdbRating, Plot, Actors, Runtime, Director | View Movie Details |
+| FavoriteMovie | imdbID, Title, Year, Poster | Store Favorites locally |
+
+Detailed data types and database schema: [Data Contract](data-contract.md)
