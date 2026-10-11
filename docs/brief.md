@@ -40,14 +40,14 @@ _based on standard SDLC Model_
 
 ### 2.2. Non-functional Requirements (NFR)
 
-| NFR | Requirement |
-| --- | --- |
-| Usability | Clear navigation, main functions are easy to find |
-| Performance | Display loading and do not lock UI when calling API |
-| Reliability | Handle API timeout, lost network, empty results |
-| Compatibility | Run on emulator and selected Android versions |
-| Security | Do not hardcode API key into public repository |
-| Maintainability | Separate UI, networking and data logic |
+| Category | Requirement | Specification & Verification Metric |
+| :--- | :--- | :--- |
+| **Usability** | Intuitive navigation & accessible controls | • All primary sections (Home, Search, Favorites, Settings) reachable within **≤ 2 taps** from anywhere in the app.<br>• Core interactive buttons provide a touch area of at least **48x48 dp**. |
+| **Performance** | Responsive UI & API conservation | • All network and database operations run asynchronously off the main UI thread to prevent UI freezing (zero ANRs).<br>• Loading indicators displayed within **≤ 100ms** of any user action.<br>• Client renders data within **≤ 500ms** of receiving API response (overall display target **≤ 2.0s** under typical network conditions).<br>• Search input delayed (debounced by ~400ms) to prevent unnecessary API queries.<br>• Movie poster images loaded and cached asynchronously without lagging list scrolling. |
+| **Reliability** | Safe error handling & offline feedback | • Network requests enforce a **10-second timeout**.<br>• Network failures, timeouts, and empty results display informative UI feedback ("Retry" option, "No results found") instead of terminating/crashing the app. |
+| **Compatibility** | Standard Android device support | • **Minimum SDK:** API 26 (Android 8.0).<br>• **Target SDK:** API 34+ (Android 14).<br>• Designed for phone form factors in portrait orientation. |
+| **Security** | API key protection | • OMDb API key excluded from public VCS; stored locally (e.g., via `local.properties` or environment variables) and injected at build time via `BuildConfig`. |
+| **Maintainability** | Architectural separation & state persistence | • Strict separation between UI, business logic, and data sources (MVVM + Repository).<br>• Screen rotation preserves the current user state without re-fetching data from the API. |
 
 ### 2.3. Use Case Analysis
 - Use Case Diagram: [Use Case Diagram](use-case-diagram.png)
@@ -106,6 +106,8 @@ Using MVVM (Model - View - ViewModel) model + Repository Pattern: [MVVM](mvv-mod
     * MainActivity/HomeFragment
     * SearchFragment
     * MovieDetailFragment
+    * FavoritesFragment
+    * SettingsFragment
     * XML layout files
 
 - **ViewModel:** Logic of interface, intermediate between View and Repository. It roles:
