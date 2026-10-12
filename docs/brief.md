@@ -46,7 +46,7 @@ _based on standard SDLC Model_
 | **Performance** | Responsive UI & API conservation | • All network and database operations run asynchronously off the main UI thread to prevent UI freezing (zero ANRs).<br>• Loading indicators displayed within **≤ 100ms** of any user action.<br>• Client renders data within **≤ 500ms** of receiving API response (overall display target **≤ 2.0s** under typical network conditions).<br>• Search input delayed (debounced by ~400ms) to prevent unnecessary API queries.<br>• Movie poster images loaded and cached asynchronously without lagging list scrolling. |
 | **Reliability** | Safe error handling & offline feedback | • Network requests enforce a **10-second timeout**.<br>• Network failures, timeouts, and empty results display informative UI feedback ("Retry" option, "No results found") instead of terminating/crashing the app. |
 | **Compatibility** | Standard Android device support | • **Minimum SDK:** API 26 (Android 8.0).<br>• **Target SDK:** API 34+ (Android 14).<br>• Designed for phone form factors in portrait orientation. |
-| **Security** | API key protection | • OMDb API key excluded from public VCS; stored locally (e.g., via `local.properties` or environment variables) and injected at build time via `BuildConfig`. |
+| **Security** | API key protection | • TMDB API key excluded from public VCS; stored locally (e.g., via `local.properties` or environment variables) and injected at build time via `BuildConfig`. |
 | **Maintainability** | Architectural separation & state persistence | • Strict separation between UI, business logic, and data sources (MVVM + Repository).<br>• Screen rotation preserves the current user state without re-fetching data from the API. |
 
 ### 2.3. Use Case Analysis
@@ -129,10 +129,11 @@ Using MVVM (Model - View - ViewModel) model + Repository Pattern: [MVVM](mvv-mod
     ```
 
 - **Repository:** Data access management, provide an abstraction between ViewModel and data sources.
-| Data Source | Role |
-|---|---|
-| Movie API (OMDb) | GET movie list, search, details |
-| Database | Store and retrieve favorite movies |
+
+    | Data Source | Role |
+    |---|---|
+    | Movie API (TMDB) | GET movie list, search, details |
+    | Database | Store and retrieve favorite movies |
 
 - **Data Flow:** View → ViewModel → Repository → API / Local Database
 
@@ -145,30 +146,32 @@ _na_
 
 ### 3.4. API Design
 #### a. API Endpoints
-- **[OMDb API](https://www.omdbapi.com):** Provides Movie Details
-- **Authentication:** API Key
+- **[TMDB API](https://developer.themoviedb.org):** The Movie Database API
+- **Base URL:** `https://api.themoviedb.org/3/`
+- **Image Base URL:** `https://image.tmdb.org/t/p/w500`
+- **Authentication:** API Key (`?api_key=...` or Header `Authorization: Bearer <token>`)
 - **Response Format:** JSON
 
 | Use Case | Request | Data Source |
 |---|---|---|
-| UC-01 Browse Featured Movies | `GET ?i={imdbID}` for each movie | OMDb |
-| UC-02 Search Movies | `GET ?s={title}&type=movie` | OMDb |
-| UC-03 View Movie Details | `GET ?i={imdbID}&plot=full` | OMDb |
+| UC-01 Browse Featured Movies | `GET /movie/popular` or `GET /movie/top_rated` | TMDB |
+| UC-02 Search Movies | `GET /search/movie?query={title}&page={page}` | TMDB |
+| UC-03 View Movie Details | `GET /movie/{movie_id}?append_to_response=credits` | TMDB |
 | UC-04 Manage Favorites | Insert / Select / Delete | Room Database |
 | UC-05 View Settings | Read / Write Preferences | SharedPreferences |
 
 #### b. API Request & Response Design
-| Use Case | Response |
+| Use Case | Response Key Fields |
 | --- | --- |
-| UC-01 | Title, Year, Poster, imdbRating, imdbID |
-| UC-02 | Title, Year, imdbID, Type, Poster |
-| UC-03 | Title, Year, imdbID, Poster, Genre, imdbRating, Plot, Actors, Runtime, Director |
+| UC-01 | id, title, poster_path, vote_average, release_date |
+| UC-02 | id, title, poster_path, vote_average, release_date |
+| UC-03 | id, title, poster_path, backdrop_path, genres, vote_average, overview, runtime, release_date, credits (cast & crew) |
 
 ### 3.5. Data Design
 | Model | Fields | Purpose |
 |---|---|---|
-| Movie | imdbID, Title, Year, Type, Poster | Browse/Search Movies |
-| MovieDetails | imdbID, Title, Year, Poster, Genre, imdbRating, Plot, Actors, Runtime, Director | View Movie Details |
-| FavoriteMovie | imdbID, Title, Year, Poster | Store Favorites locally |
+| Movie | id, title, poster_path, vote_average, release_date | Browse/Search Movies |
+| MovieDetails | id, title, poster_path, backdrop_path, genres, vote_average, overview, runtime, release_date, credits | View Movie Details |
+| FavoriteMovie | id, title, release_date, poster_path, vote_average | Store Favorites locally |
 
 Detailed data types and database schema: [Data Contract](data-contract.md)

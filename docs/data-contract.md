@@ -9,48 +9,52 @@
 
 ### 2. Data Types & JSON Mapping
 
-| OMDb Field | Java Field | Data Type | Model |
+| TMDB JSON Field | App Field | Data Type | Model |
 |---|---|---|---|
-| imdbID | imdbID | String | Movie, MovieDetails |
-| Title | title | String | Movie, MovieDetails |
-| Year | year | String | Movie, MovieDetails |
-| Poster | poster | String | Movie, MovieDetails |
-| Type | type | String | Movie |
-| Genre | genre | String | MovieDetails |
-| imdbRating | imdbRating | String | MovieDetails |
-| Plot | plot | String | MovieDetails |
-| Actors | actors | String | MovieDetails |
-| Runtime | runtime | String | MovieDetails |
-| Director | director | String | MovieDetails |
+| id | id | int | Movie, MovieDetails, FavoriteMovie |
+| title | title | String | Movie, MovieDetails, FavoriteMovie |
+| release_date | releaseDate | String | Movie, MovieDetails, FavoriteMovie |
+| poster_path | posterPath | String | Movie, MovieDetails, FavoriteMovie |
+| vote_average | voteAverage | double | Movie, MovieDetails, FavoriteMovie |
+| backdrop_path | backdropPath | String | MovieDetails |
+| overview | overview | String | Movie, MovieDetails |
+| runtime | runtime | int | MovieDetails |
+| genres | genres | List<Genre> | MovieDetails |
+| credits.cast | cast | List<CastMember> | MovieDetails |
 
-`FavoriteMovie` will retrieve corresponding field from Movie/MovieDetails when user add to Favorites.
+`FavoriteMovie` will retrieve corresponding fields from Movie/MovieDetails when user adds to Favorites.
 
-API Response Structure:
+Image Resolution Base URLs:
+- Poster: `https://image.tmdb.org/t/p/w500{poster_path}`
+- Backdrop: `https://image.tmdb.org/t/p/w780{backdrop_path}`
+
+API Paginated Response Structure (`/movie/popular`, `/search/movie`):
 | JSON Field | Description |
 |---|---|
-| Search | Array of matching movies |
-| totalResults | Total number of matching results |
-| Response | "True" or "False" |
-| Error | Error description when the request fails |
+| page | Current page number |
+| results | Array of matching `Movie` objects |
+| total_pages | Total number of result pages |
+| total_results | Total count of results |
 
 ### 3. Local Databse Design
-App uses **Room Database** to store some favorite movies locally on device.
+App uses **Room Database** to store favorite movies locally on device.
 
 Table `favorite_movies`:
-| | Data Type | Constraint |
+| Column | Data Type | Constraint |
 |---|---|---|
-| imdbID | String | PRIMARY KEY, NOT NULL |
+| id | Integer | PRIMARY KEY, NOT NULL |
 | title | String | NOT NULL |
-| year | String | |
-| poster | String | |
+| releaseDate | String | |
+| posterPath | String | |
+| voteAverage | Real / Double | |
 
 Database operations:
 | Operation | Description |
 |---|---|
 | insertFavorite() | Add a movie to Favorites |
-| getAllFavorites() | Retrieve all saved favorite movies |
+| getAllFavorites() | Retrieve all saved favorite movies (as LiveData/Flow) |
 | deleteFavorite() | Remove a movie from Favorites |
-| isFavorite() | Check whether a movie is already saved |
+| isFavorite(id) | Check whether a movie is already saved |
 
 ### 4. Data Validation & Error Handling
 
@@ -64,4 +68,4 @@ Database operations:
 | Empty Favorites list | Display "No favorite movies yet." |
 | Local database error | Display an appropriate error message |
 
-The application checks the OMDb API response status before processing movie data.
+The application handles TMDB API HTTP status codes and error responses before processing movie data.
