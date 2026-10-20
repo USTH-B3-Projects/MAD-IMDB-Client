@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent">
+    <ScrollView android:id="@+id/detail_scroll" android:layout_width="match_parent" android:layout_height="match_parent" android:scrollbars="none" android:visibility="gone">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+            <FrameLayout android:layout_width="match_parent" android:layout_height="328dp">
+                <ImageView android:id="@+id/hero" android:layout_width="match_parent" android:layout_height="match_parent" android:scaleType="centerCrop" android:background="?attr/movieBorder" android:contentDescription="@null" />
+                <View android:layout_width="match_parent" android:layout_height="180dp" android:layout_gravity="bottom" android:background="@drawable/hero_fade" />
+            </FrameLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="-40dp" android:background="@drawable/detail_card" android:padding="20dp" android:paddingTop="24dp" android:orientation="vertical">
+                <TextView android:id="@+id/detail_title" style="@style/Text.Display" android:textSize="30sp" />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
+                    <TextView android:id="@+id/detail_genres" style="@style/Text" android:layout_width="0dp" android:layout_weight="1" android:background="@drawable/chip" android:padding="8dp" android:textSize="13sp" android:gravity="center" android:maxLines="1" android:ellipsize="end" />
+                    <TextView android:id="@+id/detail_genres_second" style="@style/Text" android:layout_width="0dp" android:layout_weight="1" android:layout_marginStart="8dp" android:background="@drawable/chip" android:padding="8dp" android:textSize="13sp" android:gravity="center" android:maxLines="1" android:ellipsize="end" />
+                    <TextView style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_marginStart="8dp" android:background="@drawable/placeholder" android:padding="8dp" android:text="@string/film" />
+                </LinearLayout>
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:orientation="horizontal" android:gravity="center_vertical">
+                    <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_calendar" app:tint="?attr/movieMuted" android:contentDescription="@null" />
+                    <TextView android:id="@+id/detail_date" style="@style/Text.Caption" android:layout_width="0dp" android:layout_weight="1" android:layout_marginStart="6dp" />
+                    <ImageView android:layout_width="14dp" android:layout_height="14dp" android:src="@drawable/ic_clock" app:tint="?attr/movieMuted" android:contentDescription="@null" />
+                    <TextView android:id="@+id/detail_runtime" style="@style/Text.Caption" android:layout_width="wrap_content" android:layout_marginStart="6dp" />
+                </LinearLayout>
+                <TextView android:id="@+id/detail_rating" style="@style/Text" android:layout_marginTop="12dp" android:textSize="13sp" android:contentDescription="@string/rating" />
+                <Button android:id="@+id/detail_favorite" style="@style/Action" android:layout_marginTop="24dp" android:text="@string/add_favorite" />
+                <View style="@style/Divider" android:layout_marginTop="24dp" android:layout_marginBottom="20dp" />
+                <TextView style="@style/Text.Title" android:text="@string/overview" android:textSize="16sp" />
+                <TextView android:id="@+id/detail_overview" style="@style/Text.Body" android:layout_marginTop="10dp" />
+                <View style="@style/Divider" android:layout_marginTop="20dp" android:layout_marginBottom="20dp" />
+                <TextView style="@style/Text.Title" android:text="@string/credits" android:textSize="16sp" />
+                <TextView style="@style/Text" android:text="@string/director" android:textStyle="bold" android:layout_marginTop="12dp" />
+                <TextView android:id="@+id/detail_director" style="@style/Text.Body" android:layout_marginTop="6dp" />
+                <TextView style="@style/Text" android:text="@string/cast" android:textStyle="bold" android:layout_marginTop="12dp" />
+                <TextView android:id="@+id/detail_cast" style="@style/Text.Body" android:layout_marginTop="6dp" android:layout_marginBottom="24dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+    <include layout="@layout/include_state" />
+    <include layout="@layout/include_loading" />
+    <ImageButton android:id="@+id/detail_back" style="@style/IconAction" android:layout_gravity="top|start" android:layout_marginStart="16dp" android:layout_marginTop="4dp" android:src="@drawable/ic_back" android:background="@drawable/feedback" android:contentDescription="@string/back" />
+    <ImageButton android:id="@+id/detail_bookmark" style="@style/IconAction" android:layout_gravity="top|end" android:layout_marginEnd="16dp" android:layout_marginTop="4dp" android:src="@drawable/ic_bookmark" android:background="@drawable/feedback" android:contentDescription="@string/add_favorite" android:visibility="gone" />
+</FrameLayout>

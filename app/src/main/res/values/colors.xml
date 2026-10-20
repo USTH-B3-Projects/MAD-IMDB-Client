@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="canvas_light">#F7F5EF</color>
+    <color name="canvas_dark">#1E211D</color>
+    <color name="surface_light">#FFFFFF</color>
+    <color name="surface_dark">#2B2F29</color>
+    <color name="ink_light">#24251F</color>
+    <color name="ink_dark">#F6F4EB</color>
+    <color name="muted_light">#696B62</color>
+    <color name="muted_dark">#B9BCB3</color>
+    <color name="border_light">#E5E3DA</color>
+    <color name="border_dark">#454A41</color>
+    <color name="gold">#FFCD34</color>
+    <color name="soft_gold">#F3EAC0</color>
+    <color name="soft_gold_dark">#49432A</color>
+    <color name="danger">#A23930</color>
+    <color name="transparent">#00000000</color>
+    <color name="scrim">#99000000</color>
+    <color name="feedback_background">#2B2F29</color>
+</resources>

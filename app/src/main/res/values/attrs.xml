@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="movieBackground" format="color" />
+    <attr name="movieSurface" format="color" />
+    <attr name="movieText" format="color" />
+    <attr name="movieMuted" format="color" />
+    <attr name="movieBorder" format="color" />
+    <attr name="movieSoftGold" format="color" />
+    <attr name="movieStateSearch" format="reference" />
+    <attr name="movieStateFavorite" format="reference" />
+    <attr name="movieStateError" format="reference" />
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Movies.Light" parent="Theme.Movies.Light.Base">
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+    <style name="Theme.Movies.Dark" parent="Theme.Movies.Dark.Base">
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+</resources>

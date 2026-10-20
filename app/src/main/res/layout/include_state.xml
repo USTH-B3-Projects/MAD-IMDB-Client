@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/state_panel" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:padding="32dp" android:paddingBottom="88dp" android:visibility="gone">
+    <ImageView android:id="@+id/state_icon" android:layout_width="72dp" android:layout_height="72dp" android:padding="0dp" android:contentDescription="@null" />
+    <TextView android:id="@+id/state_title" style="@style/Text.Heading" android:layout_marginTop="24dp" android:gravity="center" />
+    <TextView android:id="@+id/state_body" style="@style/Text.Body" android:layout_marginTop="10dp" android:gravity="center" />
+    <Button android:id="@+id/state_action" style="@style/Action" android:layout_width="168dp" android:layout_marginTop="24dp" android:text="@string/retry" />
+</LinearLayout>

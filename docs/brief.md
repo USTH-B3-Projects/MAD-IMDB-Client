@@ -87,7 +87,7 @@ _based on standard SDLC Model_
     | Precondition | App is launched, user can access Movie Details or the Favorites screen. |
     | Postcondition | The Favorites list is updated and saved locally. |
     | Main Flow | 1. User selects a movie from the Home screen or search results.<br>2. System displays the Movie Details screen.<br>3. User adds the selected movie to Favorites.<br>4. System saves the movie to the Favorites list.<br>5. System displays confirmation message.<br>6. User opens the favorites screen.<br>7. System displays the saved movies. |
-    | Alternative Flow | **Remove Favorite:** User removes a movie from Favorites. System updates the list<br>**Movie already in Favorites:** System prevents duplicate and displays duplicate notificatio message<br>**Empty Favorites list:** System displays "No favorite movies yet". |
+    | Alternative Flow | **Remove Favorite:** User removes a movie from Favorites. System updates the list.<br>**Movie already in Favorites:** System prevents the duplicate without removing the saved movie and displays a notification.<br>**Empty Favorites list:** System displays "No favorite movies yet". |
 
     | Field | Description |
     | --- | --- |
@@ -101,16 +101,16 @@ _based on standard SDLC Model_
 ---
 ## Phase 3. System Design
 ### 3.1. Architecture Design
-Using MVVM (Model - View - ViewModel) model + Repository Pattern: [MVVM](mvv-model.png)
+Using MVVM (Model - View - ViewModel) with the Repository Pattern: [current architecture and sequences](architecture.md)
 - **View:** Interface, display info and receive user interactions. It includes:
     * MainActivity/HomeFragment
     * SearchFragment
-    * MovieDetailFragment
+    * DetailsFragment
     * FavoritesFragment
     * SettingsFragment
     * XML layout files
 
-- **ViewModel:** Logic of interface, intermediate between View and Repository. It roles:
+- **ViewModel:** The activity-scoped `MovieViewModel` is the interface between all screens and the repository. Its roles are:
     * Receive user actions from View
     * Request data from Repository
     * Manage `Loading`, `Success`, `Error` state
@@ -135,11 +135,11 @@ Using MVVM (Model - View - ViewModel) model + Repository Pattern: [MVVM](mvv-mod
     | Movie API (TMDB) | GET movie list, search, details |
     | Database | Store and retrieve favorite movies |
 
-- **Data Flow:** View → ViewModel → Repository → API / Local Database
+- **Data Flow:** View → shared `MovieViewModel` → `MovieRepository` → TMDB / Room. See the [current architecture](architecture.md#mvvm-and-data-flow).
 
-### 3.2. Sequence Diagram for MAIN feature
-- UC-02: [Search Movies](uc02-sequence-diagram.png)
-- UC-04: [Manage Favorites](uc04-sequence-diagram.png)
+### 3.2. Sequence diagrams for main features
+- UC-02: [Search Movies](architecture.md#search-sequence)
+- UC-04: [Add Favorite](architecture.md#add-favorite-sequence) and [Remove Favorite](architecture.md#remove-favorite-sequence)
 
 ### 3.3. UI/UX Design
 _na_
@@ -170,8 +170,6 @@ _na_
 ### 3.5. Data Design
 | Model | Fields | Purpose |
 |---|---|---|
-| Movie | id, title, poster_path, vote_average, release_date | Browse/Search Movies |
-| MovieDetails | id, title, poster_path, backdrop_path, genres, vote_average, overview, runtime, release_date, credits | View Movie Details |
-| FavoriteMovie | id, title, release_date, poster_path, vote_average | Store Favorites locally |
+| Movie | id, title, posterPath, backdropPath, genres, voteAverage, overview, runtime, releaseDate, cast, director, savedAt | Browse/search/detail data and the intentional Room favorite entity |
 
 Detailed data types and database schema: [Data Contract](data-contract.md)

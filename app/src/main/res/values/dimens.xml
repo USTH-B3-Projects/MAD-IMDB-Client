@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="gutter">20dp</dimen>
+    <dimen name="touch">48dp</dimen>
+    <dimen name="search_height">52dp</dimen>
+    <dimen name="nav_height">72dp</dimen>
+    <dimen name="poster_width">208dp</dimen>
+    <dimen name="poster_height">312dp</dimen>
+    <dimen name="display">32sp</dimen>
+    <dimen name="heading">22sp</dimen>
+    <dimen name="title">18sp</dimen>
+    <dimen name="body">14sp</dimen>
+    <dimen name="caption">12sp</dimen>
+</resources>

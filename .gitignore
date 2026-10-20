@@ -2,4 +2,14 @@
 docs/agents
 AGENTS.md
 
+# Android generated files and local credentials
+.gradle/
+.idea/
+**/build/
+local.properties
+*.jks
+*.keystore
+tmp/
+output/
+
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingBottom="10dp" android:orientation="horizontal" android:gravity="center_vertical">
+    <CheckBox android:id="@+id/movie_select" android:layout_width="@dimen/touch" android:layout_height="@dimen/touch" android:layout_marginEnd="8dp" android:visibility="gone" android:buttonTint="@color/gold" android:contentDescription="@string/select" />
+    <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:minHeight="100dp" android:padding="12dp" android:orientation="horizontal" android:gravity="center_vertical" android:background="@drawable/surface">
+        <ImageView android:id="@+id/poster" android:layout_width="64dp" android:layout_height="90dp" android:background="@drawable/placeholder" android:scaleType="centerCrop" android:contentDescription="@null" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:layout_marginEnd="8dp" android:orientation="vertical">
+            <TextView android:id="@+id/movie_title" style="@style/Text" android:textSize="15sp" android:textStyle="bold" android:maxLines="2" android:ellipsize="end" />
+            <TextView android:id="@+id/movie_meta" style="@style/Text.Caption" android:layout_marginTop="4dp" android:maxLines="2" android:ellipsize="end" />
+            <TextView android:id="@+id/movie_rating" style="@style/Text.Caption" android:layout_marginTop="4dp" />
+        </LinearLayout>
+        <ImageButton android:id="@+id/favorite_action" style="@style/IconAction" android:padding="15dp" android:src="@drawable/ic_heart" app:tint="@color/gold" android:contentDescription="@string/add_favorite" />
+    </LinearLayout>
+</LinearLayout>

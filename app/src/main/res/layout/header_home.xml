@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingTop="16dp" android:paddingBottom="40dp">
+    <TextView style="@style/Text.Heading" android:paddingStart="@dimen/gutter" android:paddingEnd="@dimen/gutter" android:text="@string/top_five" />
+    <androidx.viewpager.widget.ViewPager android:id="@+id/featured_pager" android:layout_width="match_parent" android:layout_height="328dp" android:layout_marginTop="10dp" android:clipToPadding="false" />
+    <TextView android:id="@+id/featured_title" style="@style/Text.Heading" android:gravity="center" android:layout_marginTop="12dp" android:paddingStart="@dimen/gutter" android:paddingEnd="@dimen/gutter" android:maxLines="2" android:ellipsize="end" />
+    <TextView android:id="@+id/featured_meta" style="@style/Text.Body" android:gravity="center" android:layout_marginTop="10dp" />
+    <LinearLayout android:id="@+id/pager_indicators" android:layout_width="match_parent" android:layout_height="12dp" android:gravity="center" android:layout_marginTop="12dp" android:orientation="horizontal" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/touch" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="12dp" android:paddingStart="@dimen/gutter" android:paddingEnd="@dimen/gutter">
+        <TextView style="@style/Text.Title" android:layout_width="0dp" android:layout_weight="1" android:text="@string/discover" />
+        <Button android:id="@+id/see_all" android:layout_width="64dp" android:layout_height="@dimen/touch" android:background="@null" android:textSize="13sp" android:textColor="?attr/movieText" android:textAllCaps="false" android:text="@string/see_all" />
+    </LinearLayout>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingStart="@dimen/gutter" android:paddingEnd="@dimen/gutter">
+        <LinearLayout android:id="@+id/discover_1" android:layout_width="0dp" android:layout_weight="1" android:layout_height="100dp" android:layout_marginEnd="12dp" android:background="@drawable/surface" android:orientation="horizontal" android:gravity="center_vertical" android:padding="10dp" android:clickable="true" android:focusable="true">
+            <ImageView android:id="@+id/discover_poster_1" android:layout_width="54dp" android:layout_height="80dp" android:background="@drawable/placeholder" android:scaleType="centerCrop" android:contentDescription="@null" />
+            <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:orientation="vertical">
+                <TextView android:id="@+id/discover_title_1" style="@style/Text" android:textSize="13sp" android:textStyle="bold" android:maxLines="3" android:ellipsize="end" />
+                <TextView android:id="@+id/discover_meta_1" style="@style/Text.Caption" android:textSize="11sp" android:layout_marginTop="4dp" android:maxLines="2" android:ellipsize="end" />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/discover_2" android:layout_width="0dp" android:layout_weight="1" android:layout_height="100dp" android:background="@drawable/surface" android:orientation="horizontal" android:gravity="center_vertical" android:padding="10dp" android:clickable="true" android:focusable="true">
+            <ImageView android:id="@+id/discover_poster_2" android:layout_width="54dp" android:layout_height="80dp" android:background="@drawable/placeholder" android:scaleType="centerCrop" android:contentDescription="@null" />
+            <LinearLayout android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:orientation="vertical">
+                <TextView android:id="@+id/discover_title_2" style="@style/Text" android:textSize="13sp" android:textStyle="bold" android:maxLines="3" android:ellipsize="end" />
+                <TextView android:id="@+id/discover_meta_2" style="@style/Text.Caption" android:textSize="11sp" android:layout_marginTop="4dp" android:maxLines="2" android:ellipsize="end" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

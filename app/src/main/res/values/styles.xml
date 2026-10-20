@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Movies.Light.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="movieBackground">@color/canvas_light</item>
+        <item name="movieSurface">@color/surface_light</item>
+        <item name="movieText">@color/ink_light</item>
+        <item name="movieMuted">@color/muted_light</item>
+        <item name="movieBorder">@color/border_light</item>
+        <item name="movieSoftGold">@color/soft_gold</item>
+        <item name="movieStateSearch">@drawable/state_search_light</item>
+        <item name="movieStateFavorite">@drawable/state_favorite_light</item>
+        <item name="movieStateError">@drawable/state_error_light</item>
+        <item name="android:windowBackground">?attr/movieBackground</item>
+        <item name="android:statusBarColor">?attr/movieBackground</item>
+        <item name="android:navigationBarColor">?attr/movieSurface</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorAccent">@color/gold</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorEdgeEffect">@color/gold</item>
+        <item name="android:textColorPrimary">?attr/movieText</item>
+    </style>
+    <style name="Theme.Movies.Dark.Base" parent="Theme.AppCompat.NoActionBar">
+        <item name="movieBackground">@color/canvas_dark</item>
+        <item name="movieSurface">@color/surface_dark</item>
+        <item name="movieText">@color/ink_dark</item>
+        <item name="movieMuted">@color/muted_dark</item>
+        <item name="movieBorder">@color/border_dark</item>
+        <item name="movieSoftGold">@color/soft_gold_dark</item>
+        <item name="movieStateSearch">@drawable/state_search_dark</item>
+        <item name="movieStateFavorite">@drawable/state_favorite_dark</item>
+        <item name="movieStateError">@drawable/state_error_dark</item>
+        <item name="android:windowBackground">?attr/movieBackground</item>
+        <item name="android:statusBarColor">?attr/movieBackground</item>
+        <item name="android:navigationBarColor">?attr/movieSurface</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="colorAccent">@color/gold</item>
+        <item name="android:fontFamily">sans</item>
+        <item name="android:colorEdgeEffect">@color/gold</item>
+        <item name="android:textColorPrimary">?attr/movieText</item>
+    </style>
+    <style name="Theme.Movies.Light" parent="Theme.Movies.Light.Base" />
+    <style name="Theme.Movies.Dark" parent="Theme.Movies.Dark.Base" />
+    <style name="Theme.Movies.Launch" parent="Theme.Movies.Light.Base">
+        <item name="android:windowBackground">@drawable/launch</item>
+    </style>
+    <style name="Text">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?attr/movieText</item>
+        <item name="android:textSize">@dimen/body</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    <style name="Text.Display">
+        <item name="android:textSize">@dimen/display</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Text.Heading">
+        <item name="android:textSize">@dimen/heading</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Text.Title">
+        <item name="android:textSize">@dimen/title</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Text.Body">
+        <item name="android:textColor">?attr/movieMuted</item>
+        <item name="android:lineSpacingExtra">5dp</item>
+    </style>
+    <style name="Text.Caption">
+        <item name="android:textSize">@dimen/caption</item>
+        <item name="android:textColor">?attr/movieMuted</item>
+    </style>
+    <style name="Action" parent="Widget.AppCompat.Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@drawable/button_gold</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:textColor">@color/ink_light</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:padding">8dp</item>
+    </style>
+    <style name="IconAction">
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@drawable/surface_round</item>
+        <item name="android:padding">14dp</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?attr/movieBorder</item>
+    </style>
+    <style name="Action.Secondary" parent="Action">
+        <item name="android:background">@drawable/surface</item>
+        <item name="android:textColor">?attr/movieText</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
+    <style name="Action.Danger" parent="Action">
+        <item name="android:background">@drawable/button_danger</item>
+        <item name="android:textColor">@color/ink_dark</item>
+    </style>
+</resources>

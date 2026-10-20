@@ -1,71 +1,73 @@
-# IMDB Client - Android Movie Discovery Application
+# IMDB Client data contract
 
-## IMDB Data Contract
+## Intentional model design
 
-### 1. Data Models
-- Movie
-- MovieDetails
-- FavoriteMovie
+The application uses one `Movie` class for TMDB list responses, detail responses,
+and the Room `favorite_movies` entity. A separate `FavoriteMovie` or
+`MovieDetails` transfer model is unnecessary here: saving the same object avoids
+conversion code and keeps already-loaded details available offline. This is the
+intentional implementation and does not require a database migration.
 
-### 2. Data Types & JSON Mapping
+## TMDB mapping
 
-| TMDB JSON Field | App Field | Data Type | Model |
+| TMDB JSON field | `Movie` field | Java type | Missing or invalid value |
 |---|---|---|---|
-| id | id | int | Movie, MovieDetails, FavoriteMovie |
-| title | title | String | Movie, MovieDetails, FavoriteMovie |
-| release_date | releaseDate | String | Movie, MovieDetails, FavoriteMovie |
-| poster_path | posterPath | String | Movie, MovieDetails, FavoriteMovie |
-| vote_average | voteAverage | double | Movie, MovieDetails, FavoriteMovie |
-| backdrop_path | backdropPath | String | MovieDetails |
-| overview | overview | String | Movie, MovieDetails |
-| runtime | runtime | int | MovieDetails |
-| genres | genres | List<Genre> | MovieDetails |
-| credits.cast | cast | List<CastMember> | MovieDetails |
+| `id` | `id` | `int` | Item rejected when non-positive |
+| `title` | `title` | `String` | Item rejected when empty |
+| `poster_path` | `posterPath` | `String` | Empty; placeholder shown |
+| `backdrop_path` | `backdropPath` | `String` | Empty; poster may be used |
+| `release_date` | `releaseDate` | `String` | Empty; “Not available” shown |
+| `overview` | `overview` | `String` | Empty; “Not available” shown |
+| `runtime` | `runtime` | `int` | Clamped to zero |
+| `vote_average` | `voteAverage` | `double` | Clamped to 0–10 |
+| `genres[].name` | `genres` | comma-separated `String` | Empty |
+| `credits.cast[].name` | `cast` | comma-separated `String` | Empty |
+| `credits.crew[job=Director].name` | `director` | comma-separated `String` | Empty |
 
-`FavoriteMovie` will retrieve corresponding fields from Movie/MovieDetails when user adds to Favorites.
+Paginated `/movie/popular` and `/search/movie` responses map `page`,
+`total_pages`, and valid `results` into `MoviePage`. The client caps TMDB paging
+at page 500 and removes repeated movie IDs while merging pages.
 
-Image Resolution Base URLs:
-- Poster: `https://image.tmdb.org/t/p/w500{poster_path}`
-- Backdrop: `https://image.tmdb.org/t/p/w780{backdrop_path}`
+Image URLs are accepted only for TMDB paths beginning with `/`:
 
-API Paginated Response Structure (`/movie/popular`, `/search/movie`):
-| JSON Field | Description |
-|---|---|
-| page | Current page number |
-| results | Array of matching `Movie` objects |
-| total_pages | Total number of result pages |
-| total_results | Total count of results |
+- Poster: `https://image.tmdb.org/t/p/w500{posterPath}`
+- Backdrop: `https://image.tmdb.org/t/p/w780{backdropPath}`
 
-### 3. Local Databse Design
-App uses **Room Database** to store favorite movies locally on device.
+## Room contract
 
-Table `favorite_movies`:
-| Column | Data Type | Constraint |
+Room database `favorites.db`, schema version 2, stores the `Movie` entity in
+`favorite_movies`.
+
+| Column | SQLite / Java type | Constraint or purpose |
 |---|---|---|
-| id | Integer | PRIMARY KEY, NOT NULL |
-| title | String | NOT NULL |
-| releaseDate | String | |
-| posterPath | String | |
-| voteAverage | Real / Double | |
+| `id` | INTEGER / `int` | Primary key, duplicate prevention |
+| `title` | TEXT / `String` | Not null |
+| `posterPath`, `backdropPath` | TEXT / `String` | Image paths |
+| `releaseDate`, `overview` | TEXT / `String` | Display metadata |
+| `genres`, `cast`, `director` | TEXT / `String` | Flattened detail metadata |
+| `runtime` | INTEGER / `int` | Display metadata |
+| `voteAverage` | REAL / `double` | Display metadata |
+| `savedAt` | INTEGER / `long` | Recent-first ordering; added in v2 |
 
-Database operations:
-| Operation | Description |
+All DAO access is dispatched through the repository's single worker executor.
+`add()` is transactional: it inserts and timestamps a new ID, but returns
+`false` without changing the row when that ID already exists. Removal is a
+separate `delete`/`deleteIds` operation. `restore()` supports undo, and the
+repository refreshes the observable favorites list after successful writes.
+
+## UI and failure contract
+
+| Scenario | Required behavior |
 |---|---|
-| insertFavorite() | Add a movie to Favorites |
-| getAllFavorites() | Retrieve all saved favorite movies (as LiveData/Flow) |
-| deleteFavorite() | Remove a movie from Favorites |
-| isFavorite(id) | Check whether a movie is already saved |
+| New favorite | Save once and show “Saved to Favourites” |
+| Duplicate add | Keep the existing row and show “Already in Favourites” |
+| Explicit removal | Remove from Favorites and offer Undo |
+| Empty favorites | Show “No favourite movies yet” and a browse action |
+| Storage error | Keep the current UI safe, disable writes, and offer Retry |
+| Missing movie fields | Show “Not available” or the image placeholder |
+| Empty search | Show “No movies found” |
+| Network/API failure | Show an informative state and Retry |
 
-### 4. Data Validation & Error Handling
-
-| Scenario | Expected Behavior |
-|---|---|
-| Missing movie information | Display "N/A" or an appropriate placeholder |
-| Missing poster | Display a default poster image |
-| No search results | Display "No movies found." |
-| API request failure | Display an error message with a Retry option |
-| Duplicate favorite movie | Prevent duplicate entries |
-| Empty Favorites list | Display "No favorite movies yet." |
-| Local database error | Display an appropriate error message |
-
-The application handles TMDB API HTTP status codes and error responses before processing movie data.
+The API key is injected from ignored local configuration into `BuildConfig`.
+It is never logged. As with any client-side API credential, it remains
+extractable from a built APK and must be restricted as a TMDB application key.
