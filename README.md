@@ -17,6 +17,10 @@ This is an unofficial student project and is not affiliated with IMDb. Movie dat
  
 The brief behind these requirements is in [docs/brief.md](docs/brief.md).
 
+## UI design
+ 
+The screens follow a Figma design: [View the Figma file](https://www.figma.com/design/V3sRPtZtIOTvfpqxZmUX2u). It covers Home, Search (idle and results), Details, Favourites, Settings and About, each in light and dark mode with loading, empty and error variants. The native app approximates it; see Known limits and [docs/implementation.md](docs/implementation.md) for the frame list and fidelity notes.
+ 
 ## Run locally
  
 1. Open this directory in Android Studio and install the Android SDK platform 36.1 when prompted.
