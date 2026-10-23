@@ -1,10 +1,10 @@
-# Current architecture and main sequences
+# Current Architecture and Main Sequences
 
 These diagrams describe the implemented Java/XML application. They supersede
 the earlier planning PNGs, which used separate screen ViewModels and separate
-favorite/detail model names that were never implemented.
+favourite/detail model names that were never implemented.
 
-## MVVM and data flow
+## MVVM and Data Flow
 
 ```mermaid
 flowchart LR
@@ -20,7 +20,7 @@ flowchart LR
         imageLoader["Volley ImageLoader"]
     end
     subgraph datastore ["On-device storage"]
-        room["Room FavoriteDao"]
+        room["Room FavouriteDao"]
         preferences["SharedPreferences"]
     end
     subgraph external ["External service"]
@@ -38,12 +38,12 @@ flowchart LR
 ```
 
 `MovieViewModel` is activity-scoped. `LiveData` drives loading, success, empty,
-error, retry, feedback, busy-ID, and favorites states. `SavedStateHandle` keeps
+error, retry, feedback, busy-ID, and favourites states. `SavedStateHandle` keeps
 the active tab, query, selection, sorting, and scroll positions across
 recreation. Volley performs network and parsing work off the main thread; the
 repository serializes Room work on one background executor.
 
-## Search sequence
+## Search Sequence
 
 ```mermaid
 sequenceDiagram
@@ -57,7 +57,8 @@ sequenceDiagram
     User->>SearchFragment: Enter title
     SearchFragment->>MovieViewModel: setQuery(title)
     MovieViewModel->>MovieRepository: cancel previous request
-    MovieViewModel->>MovieRepository: search after 400 ms
+    Note over MovieViewModel: Restart 400 ms debounce (main-thread Handler)
+    MovieViewModel->>MovieRepository: search(query, page 1) after the delay
     MovieRepository->>TMDB: GET /search/movie
     TMDB-->>MovieRepository: JSON page
     MovieRepository-->>MovieViewModel: MoviePage callback
@@ -65,53 +66,56 @@ sequenceDiagram
     SearchFragment-->>User: Render results or state
 ```
 
-Generation IDs ignore obsolete callbacks, and the current `ListState` is
-retained rather than re-requested during ordinary Activity recreation.
+The debounce timer lives in `MovieViewModel`: each new query cancels the previous
+request and pending timer, and the query is saved to the recent-search history
+only when the timer fires. Generation IDs ignore obsolete callbacks, and the
+current `ListState` is retained rather than re-requested during ordinary
+Activity recreation.
 
-## Add favorite sequence
+## Add Favourite Sequence
 
 ```mermaid
 sequenceDiagram
-    title Add a favorite without toggling
+    title Add a favourite without toggling
     participant User
     participant MovieScreen
     participant MovieViewModel
     participant MovieRepository
-    participant FavoriteDao
+    participant FavouriteDao
 
     User->>MovieScreen: Add to Favourites
-    MovieScreen->>MovieViewModel: addFavorite(movie)
+    MovieScreen->>MovieViewModel: addFavourite(movie)
     MovieViewModel->>MovieRepository: add(movie)
-    MovieRepository->>FavoriteDao: transactional add(movie)
-    FavoriteDao-->>MovieRepository: added or duplicate
-    MovieRepository-->>MovieViewModel: Refresh favorites and result
+    MovieRepository->>FavouriteDao: transactional add(movie)
+    FavouriteDao-->>MovieRepository: added or duplicate
+    MovieRepository-->>MovieViewModel: Refresh favourites and result
     MovieViewModel-->>MovieScreen: Saved or Already saved feedback
 ```
 
 A duplicate add never deletes or replaces the stored row. Explicit single or
-batch removal is available only from Favorites, and successful removal carries
+batch removal is available only from Favourites, and successful removal carries
 the removed movies in feedback so Undo can restore them.
 
-## Remove favorite sequence
+## Remove Favourite Sequence
 
 ```mermaid
 sequenceDiagram
-    title Explicit favorite removal and undo
+    title Explicit favourite removal and undo
     participant User
-    participant FavoritesFragment
+    participant FavouritesFragment
     participant MovieViewModel
     participant MovieRepository
-    participant FavoriteDao
+    participant FavouriteDao
 
-    User->>FavoritesFragment: Remove saved movie
-    FavoritesFragment->>MovieViewModel: removeSelected(movies)
+    User->>FavouritesFragment: Remove saved movie
+    FavouritesFragment->>MovieViewModel: removeSelected(movies)
     MovieViewModel->>MovieRepository: remove(movies)
-    MovieRepository->>FavoriteDao: deleteIds(ids)
-    FavoriteDao-->>MovieRepository: Delete complete
-    MovieRepository-->>MovieViewModel: Refresh favorites
-    MovieViewModel-->>FavoritesFragment: Removed feedback with Undo
-    User->>FavoritesFragment: Undo
-    FavoritesFragment->>MovieViewModel: undo()
+    MovieRepository->>FavouriteDao: deleteIds(ids)
+    FavouriteDao-->>MovieRepository: Delete complete
+    MovieRepository-->>MovieViewModel: Refresh favourites
+    MovieViewModel-->>FavouritesFragment: Removed feedback with Undo
+    User->>FavouritesFragment: Undo
+    FavouritesFragment->>MovieViewModel: undo()
     MovieViewModel->>MovieRepository: restore(movies)
-    MovieRepository->>FavoriteDao: save(movies)
+    MovieRepository->>FavouriteDao: restore(movies)
 ```
