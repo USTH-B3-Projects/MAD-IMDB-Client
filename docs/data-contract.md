@@ -1,6 +1,6 @@
-# IMDB Client data contract
+# IMDB Client Data Contract
 
-## Intentional model design
+## Intentional Model Design
 
 The application uses one `Movie` class for TMDB list responses, detail responses,
 and the Room `favorite_movies` entity. A separate `FavoriteMovie` or
@@ -8,7 +8,7 @@ and the Room `favorite_movies` entity. A separate `FavoriteMovie` or
 conversion code and keeps already-loaded details available offline. This is the
 intentional implementation and does not require a database migration.
 
-## TMDB mapping
+## TMDB Mapping
 
 | TMDB JSON field | `Movie` field | Java type | Missing or invalid value |
 |---|---|---|---|
@@ -20,8 +20,8 @@ intentional implementation and does not require a database migration.
 | `overview` | `overview` | `String` | Empty; “Not available” shown |
 | `runtime` | `runtime` | `int` | Clamped to zero |
 | `vote_average` | `voteAverage` | `double` | Clamped to 0–10 |
-| `genres[].name` | `genres` | comma-separated `String` | Empty |
-| `credits.cast[].name` | `cast` | comma-separated `String` | Empty |
+| `genres[].name` | `genres` | comma-separated `String` | Empty; at most the first 8 names are kept |
+| `credits.cast[].name` | `cast` | comma-separated `String` | Empty; at most the first 12 names are kept |
 | `credits.crew[job=Director].name` | `director` | comma-separated `String` | Empty |
 
 Paginated `/movie/popular` and `/search/movie` responses map `page`,
@@ -33,7 +33,7 @@ Image URLs are accepted only for TMDB paths beginning with `/`:
 - Poster: `https://image.tmdb.org/t/p/w500{posterPath}`
 - Backdrop: `https://image.tmdb.org/t/p/w780{backdropPath}`
 
-## Room contract
+## Room Contract
 
 Room database `favorites.db`, schema version 2, stores the `Movie` entity in
 `favorite_movies`.
@@ -55,14 +55,14 @@ All DAO access is dispatched through the repository's single worker executor.
 separate `delete`/`deleteIds` operation. `restore()` supports undo, and the
 repository refreshes the observable favorites list after successful writes.
 
-## UI and failure contract
+## UI and Failure Contract
 
 | Scenario | Required behavior |
 |---|---|
-| New favorite | Save once and show “Saved to Favourites” |
+| New favourite | Save once and show “Saved to Favourites” |
 | Duplicate add | Keep the existing row and show “Already in Favourites” |
 | Explicit removal | Remove from Favorites and offer Undo |
-| Empty favorites | Show “No favourite movies yet” and a browse action |
+| Empty favourites | Show “No favourite movies yet” and a browse action |
 | Storage error | Keep the current UI safe, disable writes, and offer Retry |
 | Missing movie fields | Show “Not available” or the image placeholder |
 | Empty search | Show “No movies found” |
@@ -70,4 +70,4 @@ repository refreshes the observable favorites list after successful writes.
 
 The API key is injected from ignored local configuration into `BuildConfig`.
 It is never logged. As with any client-side API credential, it remains
-extractable from a built APK and must be restricted as a TMDB application key.
+extractable from a built APK, so use a key created only for this project and regenerate it if it leaks.
