@@ -15,11 +15,11 @@ This is an unofficial student project and is not affiliated with IMDb. Movie dat
 | Libraries | AppCompat, ViewPager, Lifecycle (ViewModel, LiveData, SavedState), Volley, Room |
 | API key | A TMDB **v3 API key**. Create one under [TMDB account settings, API](https://www.themoviedb.org/settings/api) and copy the "API Key", not the "API Read Access Token" |
  
-The brief behind these requirements is in [docs/brief.md](docs/brief.md).
+The brief behind these requirements is in [brief.md](docs/brief.md).
 
 ## UI design
  
-The screens follow a Figma design: [View the Figma file](https://www.figma.com/design/V3sRPtZtIOTvfpqxZmUX2u). It covers Home, Search (idle and results), Details, Favourites, Settings and About, each in light and dark mode with loading, empty and error variants. The native app approximates it; see Known limits and [docs/implementation.md](docs/implementation.md) for the frame list and fidelity notes.
+The screens follow a Figma design: [View the Figma file](https://www.figma.com/design/V3sRPtZtIOTvfpqxZmUX2u). It covers Home, Search (idle and results), Details, Favourites, Settings and About, each in light and dark mode with loading, empty and error variants. The native app approximates it; see Known limits and [implementation.md](docs/implementation.md) for the frame list and fidelity notes.
  
 ## Run locally
  
@@ -118,13 +118,8 @@ Poster images use `https://image.tmdb.org/t/p/w500{path}` and backdrops use `...
 ```
  
 On Windows, use `.\gradlew.bat` instead of `./gradlew`.
- 
-- JVM tests (`app/src/test`) cover JSON and null parsing, credits, image hosts, paging, de-duplication and immutable state.
-- Device tests (`app/src/androidTest`) cover the native screen flow against a fake data source (theme change, rotation, selection recreation, debounce, empty/error states, retry), Room favorites against a real local database, and the schema v1-to-v2 migration.
-- Lint runs without a baseline or broad suppression, so warnings stay visible.
-- Screenshot comparisons against Figma are visual and manual, not pixel-diff assertions.
 
-The results of the last recorded run (device, Android version, test and lint counts) are in [implementation.md](docs/implementation.md).
+What the tests cover, the last recorded results (device, Android version, test and lint counts) and what is still unverified are in [implementation.md](docs/implementation.md).
 
 ## Documentation
 
