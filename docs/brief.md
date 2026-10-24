@@ -87,7 +87,7 @@ Android App for client to **search, view movie's info, and add to favourites** t
     | Precondition | App is launched, user can access Movie Details or the Favourites screen. |
     | Postcondition | The Favourites list is updated and saved locally. |
     | Main Flow | 1. User selects a movie from the Home screen or search results.<br>2. System displays the Movie Details screen.<br>3. User adds the selected movie to Favourites.<br>4. System saves the movie to the Favourites list.<br>5. System displays confirmation message.<br>6. User opens the favourites screen.<br>7. System displays the saved movies. |
-    | Alternative Flow | **Remove Favourite:** User removes a movie from Favourites. System updates the list.<br>**Movie already in Favourites:** System prevents the duplicate without removing the saved movie and displays a notification.<br>**Empty Favourites list:** System displays "No favourite movies yet". |
+    | Alternative Flow | **Remove Favourite:** User removes a movie from Favourites. System updates the list.<br>**Undo after adding:** Right after a movie is added, the notification offers Undo; selecting it removes that movie again and displays a notification.<br>**Undo after removal:** After a movie is removed from Favourites, the notification offers Undo; selecting it restores the removed movie.<br>**Movie already in Favourites:** System prevents the duplicate without removing the saved movie and displays a notification (no Undo is offered).<br>**Empty Favourites list:** System displays "No favourite movies yet". |
 
     | Field | Description |
     | --- | --- |
@@ -130,7 +130,7 @@ Using MVVM (Model - View - ViewModel) with the Repository Pattern: [current arch
 
 ### 3.2. Sequence Diagrams for Main Features
 - UC-02: [Search Movies](architecture.md#search-sequence)
-- UC-04: [Add Favourite](architecture.md#add-favorite-sequence) and [Remove Favourite](architecture.md#remove-favorite-sequence)
+- UC-04: [Add Favourite](architecture.md#add-favourite-sequence) and [Remove Favourite](architecture.md#remove-favourite-sequence)
 
 ### 3.3. UI/UX Design
 The screens follow a Figma design: [open in Figma](https://www.figma.com/design/V3sRPtZtIOTvfpqxZmUX2u). It covers Home, Search, Details, Favourites, Settings and About in light and dark mode, with loading, empty and error variants. Frame IDs and design tokens are in [implementation.md](implementation.md#figma-targets).
