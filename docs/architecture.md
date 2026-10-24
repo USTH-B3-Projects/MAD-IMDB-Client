@@ -20,7 +20,7 @@ flowchart LR
         imageLoader["Volley ImageLoader"]
     end
     subgraph datastore ["On-device storage"]
-        room["Room FavouriteDao"]
+        room["Room FavoriteDao"]
         preferences["SharedPreferences"]
     end
     subgraph external ["External service"]
@@ -81,20 +81,28 @@ sequenceDiagram
     participant MovieScreen
     participant MovieViewModel
     participant MovieRepository
-    participant FavouriteDao
+    participant FavoriteDao
 
     User->>MovieScreen: Add to Favourites
-    MovieScreen->>MovieViewModel: addFavourite(movie)
+    MovieScreen->>MovieViewModel: addFavorite(movie)
     MovieViewModel->>MovieRepository: add(movie)
-    MovieRepository->>FavouriteDao: transactional add(movie)
-    FavouriteDao-->>MovieRepository: added or duplicate
+    MovieRepository->>FavoriteDao: transactional add(movie)
+    FavoriteDao-->>MovieRepository: added or duplicate
     MovieRepository-->>MovieViewModel: Refresh favourites and result
-    MovieViewModel-->>MovieScreen: Saved or Already saved feedback
+    MovieViewModel-->>MovieScreen: Saved (with Undo) or Already saved feedback
+    opt User taps Undo within 4 s
+        User->>MovieScreen: Undo
+        MovieScreen->>MovieViewModel: undo()
+        MovieViewModel->>MovieRepository: remove([movie])
+        MovieRepository->>FavoriteDao: deleteIds(ids)
+        MovieViewModel-->>MovieScreen: Removed feedback (no Undo)
+    end
 ```
 
-A duplicate add never deletes or replaces the stored row. Explicit single or
-batch removal is available only from Favourites, and successful removal carries
-the removed movies in feedback so Undo can restore them.
+A duplicate add never deletes or replaces the stored row. A successful add
+carries the added movie in feedback, so Undo can take it out again. Explicit
+single or batch removal is available only from Favourites, and successful
+removal carries the removed movies in feedback so Undo can restore them.
 
 ## Remove Favourite Sequence
 
@@ -102,20 +110,20 @@ the removed movies in feedback so Undo can restore them.
 sequenceDiagram
     title Explicit favourite removal and undo
     participant User
-    participant FavouritesFragment
+    participant FavoritesFragment
     participant MovieViewModel
     participant MovieRepository
-    participant FavouriteDao
+    participant FavoriteDao
 
-    User->>FavouritesFragment: Remove saved movie
-    FavouritesFragment->>MovieViewModel: removeSelected(movies)
+    User->>FavoritesFragment: Remove saved movie
+    FavoritesFragment->>MovieViewModel: removeSelected(movies)
     MovieViewModel->>MovieRepository: remove(movies)
-    MovieRepository->>FavouriteDao: deleteIds(ids)
-    FavouriteDao-->>MovieRepository: Delete complete
+    MovieRepository->>FavoriteDao: deleteIds(ids)
+    FavoriteDao-->>MovieRepository: Delete complete
     MovieRepository-->>MovieViewModel: Refresh favourites
-    MovieViewModel-->>FavouritesFragment: Removed feedback with Undo
-    User->>FavouritesFragment: Undo
-    FavouritesFragment->>MovieViewModel: undo()
+    MovieViewModel-->>FavoritesFragment: Removed feedback with Undo
+    User->>FavoritesFragment: Undo
+    FavoritesFragment->>MovieViewModel: undo()
     MovieViewModel->>MovieRepository: restore(movies)
-    MovieRepository->>FavouriteDao: restore(movies)
+    MovieRepository->>FavoriteDao: restore(movies)
 ```
