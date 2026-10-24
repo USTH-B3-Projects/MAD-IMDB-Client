@@ -52,16 +52,18 @@ Room database `favorites.db`, schema version 2, stores the `Movie` entity in
 All DAO access is dispatched through the repository's single worker executor.
 `add()` is transactional: it inserts and timestamps a new ID, but returns
 `false` without changing the row when that ID already exists. Removal is a
-separate `delete`/`deleteIds` operation. `restore()` supports undo, and the
+separate `delete`/`deleteIds` operation. `restore()` supports undoing a removal, and
+undoing an add reuses `deleteIds` for the movie just added. The
 repository refreshes the observable favorites list after successful writes.
 
 ## UI and Failure Contract
 
 | Scenario | Required behavior |
 |---|---|
-| New favourite | Save once and show “Saved to Favourites” |
-| Duplicate add | Keep the existing row and show “Already in Favourites” |
-| Explicit removal | Remove from Favorites and offer Undo |
+| New favourite | Save once and show “Saved to Favourites” with Undo |
+| Undo after add | Remove the just-added movie and show “Removed from Favourites” without Undo |
+| Duplicate add | Keep the existing row and show “Already in Favourites” without Undo |
+| Explicit removal | Remove from Favorites and offer Undo (restores the removed movies) |
 | Empty favourites | Show “No favourite movies yet” and a browse action |
 | Storage error | Keep the current UI safe, disable writes, and offer Retry |
 | Missing movie fields | Show “Not available” or the image placeholder |
