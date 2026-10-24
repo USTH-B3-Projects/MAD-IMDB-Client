@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="@dimen/search_height" android:gravity="center_vertical" android:background="@drawable/surface" android:orientation="horizontal">
-    <ImageView android:layout_width="52dp" android:layout_height="52dp" android:padding="16dp" android:src="@drawable/ic_search" app:tint="?attr/movieMuted" android:contentDescription="@null" />
-    <EditText android:id="@+id/query" android:layout_width="0dp" android:layout_weight="1" android:layout_height="match_parent" android:background="@null" android:padding="0dp" android:hint="@string/search_hint" android:importantForAutofill="no" android:inputType="text" android:singleLine="true" android:maxLength="150" android:imeOptions="actionSearch" android:textColor="?attr/movieText" android:textColorHint="?attr/movieMuted" android:textSize="16sp" />
-    <ImageButton android:id="@+id/clear_query" android:layout_width="52dp" android:layout_height="52dp" android:background="@null" android:padding="9dp" android:src="@drawable/ic_clear" app:tint="?attr/movieMuted" android:contentDescription="@string/clear_query" />
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/search_height"
+    android:gravity="center_vertical"
+    android:background="@drawable/surface"
+    android:orientation="horizontal"
+    >
+    <ImageView
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:padding="16dp"
+        android:src="@drawable/ic_search"
+        app:tint="?attr/movieMuted"
+        android:contentDescription="@null"
+        />
+    <EditText
+        android:id="@+id/query"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:padding="0dp"
+        android:hint="@string/search_hint"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:singleLine="true"
+        android:maxLength="150"
+        android:imeOptions="actionSearch"
+        android:textColor="?attr/movieText"
+        android:textColorHint="?attr/movieMuted"
+        android:textSize="16sp"
+        />
+    <ImageButton
+        android:id="@+id/clear_query"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:background="@null"
+        android:padding="16dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_clear"
+        app:tint="?attr/movieMuted"
+        android:contentDescription="@string/clear_query"
+        />
 </LinearLayout>

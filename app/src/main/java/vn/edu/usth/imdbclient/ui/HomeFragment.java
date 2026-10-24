@@ -37,9 +37,7 @@ public class HomeFragment extends ScreenFragment {
         query.setFocusable(false);
         query.setClickable(true);
         query.setOnClickListener(v -> host().showTab("search"));
-        ((ImageView) root.findViewById(R.id.clear_query)).setImageResource(R.drawable.ic_filter);
-        root.findViewById(R.id.clear_query).setContentDescription(getString(R.string.search_movies));
-        root.findViewById(R.id.clear_query).setOnClickListener(v -> host().showTab("search"));
+        root.findViewById(R.id.clear_query).setVisibility(View.GONE);
         list = root.findViewById(R.id.movie_list);
         header = LayoutInflater.from(requireContext()).inflate(R.layout.header_home, list, false);
         Ui.fonts(header);

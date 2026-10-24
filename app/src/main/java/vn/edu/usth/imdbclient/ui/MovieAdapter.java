@@ -55,7 +55,7 @@ final class MovieAdapter extends BaseAdapter {
         Ui.image(row.findViewById(R.id.poster), movie.imageUrl(false), activity.getString(R.string.poster_description, movie.title));
         boolean saved = model.isFavorite(movie.id);
         ImageButton favorite = row.findViewById(R.id.favorite_action);
-        favorite.setImageResource(saved ? R.drawable.ic_heart_saved : R.drawable.ic_heart);
+        favorite.setImageResource(saved ? R.drawable.ic_heart_filled : R.drawable.ic_heart);
         favorite.setContentDescription(activity.getString(removable ? R.string.remove_favorite : R.string.add_favorite) + ": " + movie.title);
         favorite.setEnabled(!model.busyIds.getValue().contains(movie.id) && model.favorites.getValue() != null && model.favoritesError.getValue() == null);
         favorite.setOnClickListener(v -> {

@@ -18,6 +18,7 @@ import vn.edu.usth.imdbclient.viewmodel.MovieViewModel;
 public class MainActivity extends AppCompatActivity {
     private MovieViewModel model;
     private String tab = "home";
+    private Runnable hideFeedback;
 
     @Override protected void onCreate(Bundle state) {
         boolean dark = getSharedPreferences("settings", 0).getBoolean("dark", false);
@@ -42,14 +43,59 @@ public class MainActivity extends AppCompatActivity {
         });
         model.feedback.observe(this, feedback -> {
             View bar = findViewById(R.id.feedback_bar);
-            bar.setVisibility(feedback == null ? View.GONE : View.VISIBLE);
-            if (feedback == null) return;
-            int message = feedback.kind == MovieViewModel.Feedback.Kind.ADDED ? R.string.saved
-                    : feedback.kind == MovieViewModel.Feedback.Kind.DUPLICATE ? R.string.already_saved
-                    : feedback.kind == MovieViewModel.Feedback.Kind.REMOVED ? R.string.removed
-                    : feedback.kind == MovieViewModel.Feedback.Kind.RESTORED ? R.string.restored : R.string.storage_error;
+
+            if (hideFeedback != null) {
+                bar.removeCallbacks(hideFeedback);
+                hideFeedback = null;
+            }
+            bar.animate().cancel();
+
+            if (feedback == null) {
+                bar.setVisibility(View.GONE);
+                bar.setAlpha(1f);
+                return;
+            }
+
+            int message =
+                    feedback.kind == MovieViewModel.Feedback.Kind.ADDED
+                            ? R.string.saved
+                    : feedback.kind == MovieViewModel.Feedback.Kind.DUPLICATE
+                            ? R.string.already_saved
+                    : feedback.kind == MovieViewModel.Feedback.Kind.REMOVED
+                            ? R.string.removed
+                    : feedback.kind == MovieViewModel.Feedback.Kind.RESTORED
+                            ? R.string.restored
+                            : R.string.storage_error;
             ((TextView) findViewById(R.id.feedback_text)).setText(message);
-            findViewById(R.id.feedback_undo).setVisibility(feedback.removed.isEmpty() ? View.GONE : View.VISIBLE);
+
+            boolean hasUndo = !feedback.removed.isEmpty();
+            findViewById(R.id.feedback_undo)
+                    .setVisibility(feedback.removed.isEmpty() ? View.VISIBLE : View.GONE);
+
+            bar.setAlpha(0f);
+            bar.setVisibility(View.VISIBLE);
+
+            hideFeedback = () -> {
+                bar.animate()
+                        .alpha(0f)
+                        .setStartDelay(0)
+                        .setDuration(300)
+                        .withEndAction(() -> {
+                            bar.setVisibility(View.GONE);
+                            bar.setAlpha(1f);
+                        }).start();
+            };
+
+            long displayDuration = hasUndo ? 4000L : 2000L;
+            Runnable pendingHide = hideFeedback;
+
+            bar.animate().
+                    alpha(1f)
+                    .setStartDelay(0)
+                    .setDuration(200)
+                    .withEndAction(() ->
+                            bar.postDelayed(pendingHide, displayDuration))
+                    .start();
             bar.announceForAccessibility(getString(message));
         });
         if (state == null) showTab(tab); else updateNavigation();
