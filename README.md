@@ -17,7 +17,7 @@ This is an unofficial student project and is not affiliated with IMDb. Movie dat
  
 The brief behind these requirements is in [brief.md](docs/brief.md).
 
-## UI design
+## UI Design
  
 The screens follow a Figma design: [View the Figma file](https://www.figma.com/design/V3sRPtZtIOTvfpqxZmUX2u). It covers Home, Search (idle and results), Details, Favourites, Settings and About, each in light and dark mode with loading, empty and error variants. The native app approximates it; see Known limits and [implementation.md](docs/implementation.md) for the frame list and fidelity notes.
  
@@ -88,13 +88,13 @@ Frontend constraints follow the course material: Activities/Fragments, standard 
 - **Home**: `ViewPager` showcase of five posters, discover cards and a paginated popular-movie list.
 - **Search**: suggestions, locally stored recent queries, 400 ms debounce, cancellation of the previous request, pagination, and empty/error/retry states. Obsolete callbacks are ignored through generation IDs.
 - **Details**: release date, rating, runtime, overview, genres, director and cast when TMDB returns them. Missing fields show "Not available" or an image placeholder, never invented values.
-- **Favorites**: persistent add/remove in Room, sorting, multi-selection, batch removal and Undo. Add never toggles: a duplicate add keeps the stored row and shows "Already in Favourites". Removal is explicit and only available from Favorites.
+- **Favorites**: persistent add/remove in Room, sorting, multi-selection, batch removal and Undo. Add never toggles: a duplicate add keeps the stored row and shows "Already in Favourites". Removal is explicit and only available from Favorites. After a new add (from Home, Search or Details) the confirmation offers Undo for 4 seconds, which takes the just-added movie out again.
 - **Settings**: light/dark theme and search-history clearing (favorites are untouched) stored in `SharedPreferences`, plus About and TMDB attribution.
 - **State**: rotation and Activity recreation retain the current `ListState` without re-requesting data. Selection survives recreation.
 - **Reliability**: network requests use a 10-second timeout; failures show an informative state with Retry. A storage error disables favorite writes and offers Retry.
 - **Images**: posters load through Volley's `ImageLoader` with a memory cache capped at 24 MiB plus the queue's disk cache.
 
-Out of scope: user authentication, user accounts, cloud synchronization and a custom backend.
+**Out of scope**: user authentication, user accounts, cloud synchronization and a custom backend.
 
 ## External API and Storage
 
@@ -125,10 +125,10 @@ What the tests cover, the last recorded results (device, Android version, test a
 
 | Document | Content |
 |---|---|
-| [docs/brief.md](docs/brief.md) | SDLC brief: scope, requirements, use cases, design |
-| [docs/architecture.md](docs/architecture.md) | Current MVVM diagram and search/add/remove sequences |
-| [docs/data-contract.md](docs/data-contract.md) | TMDB mapping, Room schema, UI and failure behavior |
-| [docs/implementation.md](docs/implementation.md) | Course API mapping, Figma targets, assets, validation log |
+| [brief.md](docs/brief.md) | SDLC brief: scope, requirements, use cases, design |
+| [architecture.md](docs/architecture.md) | Current MVVM diagram and search/add/remove sequences |
+| [data-contract.md](docs/data-contract.md) | TMDB mapping, Room schema, UI and failure behavior |
+| [implementation.md](docs/implementation.md) | Course API mapping, Figma targets, assets, validation log |
 
 The diagrams in `architecture.md` match the implemented app. `mvv-model.png` and the two sequence-diagram PNGs in `docs/` are planning-phase drawings.
 
