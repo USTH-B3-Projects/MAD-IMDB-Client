@@ -44,7 +44,11 @@ public class MovieViewModel extends AndroidViewModel {
         public enum Kind { ADDED, DUPLICATE, REMOVED, RESTORED, STORAGE_ERROR }
         public final Kind kind;
         public final List<Movie> removed;
-        public Feedback(Kind kind, List<Movie> removed) { this.kind = kind; this.removed = removed; }
+        /** The movie just added, so Undo can take it back out; null for every other feedback. */
+        public final Movie added;
+        public Feedback(Kind kind, List<Movie> removed) { this(kind, removed, null); }
+        public Feedback(Kind kind, List<Movie> removed, Movie added) { this.kind = kind; this.removed = removed; this.added = added; }
+        public boolean canUndo() { return added != null || !removed.isEmpty(); }
     }
 
     public MovieViewModel(Application application, SavedStateHandle saved) {
@@ -140,8 +144,9 @@ public class MovieViewModel extends AndroidViewModel {
         repository.add(movie, new Callback<Boolean>() {
             @Override public void success(Boolean added) {
                 busy(movie.id, false);
-                feedback.setValue(new Feedback(added ? Feedback.Kind.ADDED : Feedback.Kind.DUPLICATE,
-                        Collections.emptyList()));
+                feedback.setValue(added
+                        ? new Feedback(Feedback.Kind.ADDED, Collections.emptyList(), movie)
+                        : new Feedback(Feedback.Kind.DUPLICATE, Collections.emptyList()));
             }
             @Override public void failure(Failure reason) {
                 busy(movie.id, false);
@@ -165,8 +170,16 @@ public class MovieViewModel extends AndroidViewModel {
     }
     public void undo() {
         Feedback value = feedback.getValue();
-        if (value == null || value.removed.isEmpty()) return;
+        if (value == null || !value.canUndo()) return;
         feedback.setValue(null);
+        if (value.added != null) {
+            // Undo of an add: take the just-saved movie out again (shown as a plain "Removed" message).
+            repository.remove(Collections.singletonList(value.added), new Callback<Void>() {
+                @Override public void success(Void ignored) { feedback.setValue(new Feedback(Feedback.Kind.REMOVED, Collections.emptyList())); }
+                @Override public void failure(Failure reason) { feedback.setValue(new Feedback(Feedback.Kind.STORAGE_ERROR, Collections.emptyList())); }
+            });
+            return;
+        }
         repository.restore(value.removed, new Callback<Void>() {
             @Override public void success(Void ignored) { feedback.setValue(new Feedback(Feedback.Kind.RESTORED, Collections.emptyList())); }
             @Override public void failure(Failure reason) { feedback.setValue(new Feedback(Feedback.Kind.STORAGE_ERROR, Collections.emptyList())); }

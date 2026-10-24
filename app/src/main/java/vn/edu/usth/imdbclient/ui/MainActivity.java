@@ -68,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
                             : R.string.storage_error;
             ((TextView) findViewById(R.id.feedback_text)).setText(message);
 
-            boolean hasUndo = !feedback.removed.isEmpty();
+            boolean hasUndo = feedback.canUndo();
             findViewById(R.id.feedback_undo)
-                    .setVisibility(feedback.removed.isEmpty() ? View.VISIBLE : View.GONE);
+                    .setVisibility(hasUndo ? View.VISIBLE : View.GONE);
 
             bar.setAlpha(0f);
             bar.setVisibility(View.VISIBLE);
