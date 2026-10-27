@@ -80,7 +80,6 @@ public class MovieViewModel extends AndroidViewModel {
         search.setValue(query.isEmpty() ? ListState.empty() : ListState.empty().loading());
         if (!query.isEmpty()) {
             pendingSearch = () -> {
-                saveHistory(query);
                 repository.search(query, 1, searchTag, pageCallback(search, () -> generation == searchGeneration));
             };
             main.postDelayed(pendingSearch, 400);
@@ -193,6 +192,11 @@ public class MovieViewModel extends AndroidViewModel {
     public List<String> history() {
         String stored = preferences.getString("history", "");
         return stored.isEmpty() ? Collections.emptyList() : Arrays.asList(stored.split("\n"));
+    }
+    /** Saves the current query to the recent searches; call only when the user commits it (Search key, opening a result). */
+    public void saveQueryToHistory() {
+        String query = query();
+        if (query != null && !query.isEmpty()) saveHistory(query);
     }
     private void saveHistory(String query) {
         List<String> history = new ArrayList<>(history());

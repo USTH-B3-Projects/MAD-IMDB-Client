@@ -46,6 +46,7 @@ public class SearchFragment extends ScreenFragment {
         query.addTextChangedListener(watcher);
         query.setOnEditorActionListener((text, action, event) -> {
             if (action != EditorInfo.IME_ACTION_SEARCH) return false;
+            model.saveQueryToHistory();
             host().hideKeyboard(); return true;
         });
         root.findViewById(R.id.clear_query).setOnClickListener(v -> query.setText(""));
@@ -91,7 +92,8 @@ public class SearchFragment extends ScreenFragment {
                 }
             });
             suggestions.setOnItemClickListener((parent, view, position, id) -> {
-                query.setText(values.get(position)); query.setSelection(query.length()); host().hideKeyboard();
+                query.setText(values.get(position)); query.setSelection(query.length());
+                model.saveQueryToHistory(); host().hideKeyboard();
             });
             return;
         }

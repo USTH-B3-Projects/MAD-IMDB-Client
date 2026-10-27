@@ -59,13 +59,13 @@ public class MainActivity extends AppCompatActivity {
             int message =
                     feedback.kind == MovieViewModel.Feedback.Kind.ADDED
                             ? R.string.saved
-                    : feedback.kind == MovieViewModel.Feedback.Kind.DUPLICATE
-                            ? R.string.already_saved
-                    : feedback.kind == MovieViewModel.Feedback.Kind.REMOVED
-                            ? R.string.removed
-                    : feedback.kind == MovieViewModel.Feedback.Kind.RESTORED
-                            ? R.string.restored
-                            : R.string.storage_error;
+                            : feedback.kind == MovieViewModel.Feedback.Kind.DUPLICATE
+                              ? R.string.already_saved
+                              : feedback.kind == MovieViewModel.Feedback.Kind.REMOVED
+                                ? R.string.removed
+                                : feedback.kind == MovieViewModel.Feedback.Kind.RESTORED
+                                  ? R.string.restored
+                                  : R.string.storage_error;
             ((TextView) findViewById(R.id.feedback_text)).setText(message);
 
             boolean hasUndo = feedback.canUndo();
@@ -113,12 +113,13 @@ public class MainActivity extends AppCompatActivity {
         if (!"favorites".equals(tab)) model.feedback.setValue(null);
         if (!same) {
             Fragment screen = "search".equals(tab) ? new SearchFragment() : "favorites".equals(tab)
-                    ? new FavoritesFragment() : "settings".equals(tab) ? new SettingsFragment() : new HomeFragment();
+                                                                            ? new FavoritesFragment() : "settings".equals(tab) ? new SettingsFragment() : new HomeFragment();
             manager.beginTransaction().replace(R.id.screen_container, screen).commit();
         }
         updateNavigation();
     }
     public void openMovie(Movie movie) {
+        if ("search".equals(tab)) model.saveQueryToHistory();
         hideKeyboard();
         model.loadDetails(movie.id, false);
         getSupportFragmentManager().beginTransaction().replace(R.id.screen_container, DetailsFragment.create(movie.id)).addToBackStack("details").commit();

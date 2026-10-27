@@ -66,11 +66,7 @@ sequenceDiagram
     SearchFragment-->>User: Render results or state
 ```
 
-The debounce timer lives in `MovieViewModel`: each new query cancels the previous
-request and pending timer, and the query is saved to the recent-search history
-only when the timer fires. Generation IDs ignore obsolete callbacks, and the
-current `ListState` is retained rather than re-requested during ordinary
-Activity recreation.
+The debounce timer lives in `MovieViewModel`: each new query cancels the previous request and pending timer. The query is saved to the recent-search history only when the user confirms it (Search key, picking a suggestion, or opening a result), so partial text typed while searching is never stored. Generation IDs ignore obsolete callbacks, and the current `ListState` is retained rather than re-requested during ordinary Activity recreation.
 
 ## Add Favourite Sequence
 
