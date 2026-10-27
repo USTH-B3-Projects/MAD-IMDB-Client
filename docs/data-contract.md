@@ -62,7 +62,8 @@ repository refreshes the observable favorites list after successful writes.
 |---|---|
 | New favourite | Save once and show “Saved to Favourites” with Undo |
 | Undo after add | Remove the just-added movie and show “Removed from Favourites” without Undo |
-| Duplicate add | Keep the existing row and show “Already in Favourites” without Undo |
+| Duplicate add (Home, Search) | Keep the existing row and show “Already in Favourites” without Undo |
+| Movie already saved (Details) | The button reads “Already in Favourites” and does nothing; no notification |
 | Explicit removal | Remove from Favorites and offer Undo (restores the removed movies) |
 | Empty favourites | Show “No favourite movies yet” and a browse action |
 | Storage error | Keep the current UI safe, disable writes, and offer Retry |

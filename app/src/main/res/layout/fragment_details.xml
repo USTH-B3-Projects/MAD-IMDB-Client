@@ -36,5 +36,4 @@
     <include layout="@layout/include_state" />
     <include layout="@layout/include_loading" />
     <ImageButton android:id="@+id/detail_back" style="@style/IconAction" android:layout_gravity="top|start" android:layout_marginStart="16dp" android:layout_marginTop="4dp" android:src="@drawable/ic_back" android:background="@drawable/feedback" android:contentDescription="@string/back" />
-    <ImageButton android:id="@+id/detail_bookmark" style="@style/IconAction" android:layout_gravity="top|end" android:layout_marginEnd="16dp" android:layout_marginTop="4dp" android:src="@drawable/ic_bookmark" android:background="@drawable/feedback" android:contentDescription="@string/add_favorite" android:visibility="gone" />
 </FrameLayout>

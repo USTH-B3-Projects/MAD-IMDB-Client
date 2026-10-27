@@ -99,6 +99,7 @@ A duplicate add never deletes or replaces the stored row. A successful add
 carries the added movie in feedback, so Undo can take it out again. Explicit
 single or batch removal is available only from Favourites, and successful
 removal carries the removed movies in feedback so Undo can restore them.
+On the Details screen, the button already reads "Already in Favourites" for a saved movie and does not call `addFavorite`, so no duplicate feedback appears there.
 
 ## Remove Favourite Sequence
 

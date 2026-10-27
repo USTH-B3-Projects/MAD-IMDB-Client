@@ -3,7 +3,6 @@ package vn.edu.usth.imdbclient.ui;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import androidx.annotation.NonNull;
@@ -23,7 +22,6 @@ public class DetailsFragment extends ScreenFragment {
         movieId = requireArguments().getInt("id");
         root.findViewById(R.id.detail_back).setOnClickListener(v -> host().onBackPressed());
         root.findViewById(R.id.detail_favorite).setOnClickListener(v -> addFavorite());
-        root.findViewById(R.id.detail_bookmark).setOnClickListener(v -> addFavorite());
         model.detail.observe(getViewLifecycleOwner(), movie -> {
             if (movie != null && movie.id == movieId) bind(root, movie);
         });
@@ -32,7 +30,6 @@ public class DetailsFragment extends ScreenFragment {
             if (loading) {
                 root.findViewById(R.id.state_panel).setVisibility(View.GONE);
                 root.findViewById(R.id.detail_scroll).setVisibility(View.GONE);
-                root.findViewById(R.id.detail_bookmark).setVisibility(View.GONE);
             }
         });
         model.detailError.observe(getViewLifecycleOwner(), error -> {
@@ -46,7 +43,6 @@ public class DetailsFragment extends ScreenFragment {
     private void bind(View root, Movie movie) {
         root.findViewById(R.id.state_panel).setVisibility(View.GONE);
         root.findViewById(R.id.detail_scroll).setVisibility(View.VISIBLE);
-        root.findViewById(R.id.detail_bookmark).setVisibility(View.VISIBLE);
         Ui.text(root, R.id.detail_title, movie.title);
         String[] genres = Ui.available(requireContext(), movie.genres).split(", ");
         Ui.text(root, R.id.detail_genres, genres[0]);
@@ -69,18 +65,15 @@ public class DetailsFragment extends ScreenFragment {
     }
     private void addFavorite() {
         Movie movie = model.detail.getValue();
-        if (movie != null && movie.id == movieId) model.addFavorite(movie);
+        if (movie != null && movie.id == movieId && !model.isFavorite(movieId)) model.addFavorite(movie);
     }
     private void favoriteButton(View root) {
         boolean saved = model.isFavorite(movieId);
         boolean busy = model.busyIds.getValue().contains(movieId) || model.favorites.getValue() == null || model.favoritesError.getValue() != null;
         Button button = root.findViewById(R.id.detail_favorite);
-        button.setText(R.string.add_favorite);
+        button.setText(saved ? R.string.already_saved : R.string.add_favorite);
+        button.setAlpha(saved ? .6f : 1f);
         button.setEnabled(!busy);
-        ImageButton bookmark = root.findViewById(R.id.detail_bookmark);
-        bookmark.setEnabled(!busy);
-        bookmark.setColorFilter(saved ? requireContext().getColor(R.color.gold) : requireContext().getColor(R.color.ink_dark));
-        bookmark.setContentDescription(getString(R.string.add_favorite));
     }
     @Override public void onDestroyView() {
         model.saved.set("detailScrollId", movieId);
