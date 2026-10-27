@@ -59,7 +59,7 @@ Android App for client to **search, view movie's info, and add to favourites** t
     | Actor | Guest User |
     | Precondition | App is launched, user can access the Home screen |
     | Postcondition | The available featured movies are displayed with their posters, titles, and ratings. |
-    | Main Flow | 1. User opens the Home screen.<br>2. System retrieves the featured movie list from the API.<br>3. System displays the available movies.<br>4. User scrolls through the movie list. |
+    | Main Flow | 1. User opens the Home screen.<br>2. System retrieves the featured movie list from the API.<br>3. System displays the featured showcase and two discover cards.<br>4. User taps See all.<br>5. System replaces the cards with the full movie list.<br>6. User scrolls through the movie list. |
     | Alternative Flow | No featured Movies available: The system displays a message "No movies available." | 
 
     | Field | Description |

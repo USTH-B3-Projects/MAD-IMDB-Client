@@ -85,7 +85,7 @@ Frontend constraints follow the course material: Activities/Fragments, standard 
 
 ## Behavior and Data
 
-- **Home**: `ViewPager` showcase of five posters, discover cards and a paginated popular-movie list.
+- **Home**: `ViewPager` showcase of five posters, two discover cards and a paginated popular-movie list that replaces the cards when users tap See all (Hide brings the cards back).
 - **Search**: suggestions, 400 ms debounce, recent queries stored locally only when a full title is confirmed (Search key on the keyboard, or opening a result), never per typed character, cancellation of the previous request, pagination, and empty/error/retry states. Obsolete callbacks are ignored through generation IDs.
 - **Details**: release date, rating, runtime, overview, genres, director and cast when TMDB returns them. Missing fields show "Not available" or an image placeholder, never invented values.
 - **Favorites**: persistent add/remove in Room, sorting, multi-selection, batch removal and Undo. Add never toggles: a duplicate add keeps the stored row and shows "Already in Favourites". Removal is explicit and only available from Favorites. After a new add (from Home, Search or Details) the confirmation offers Undo for 4 seconds, which takes the just-added movie out again.

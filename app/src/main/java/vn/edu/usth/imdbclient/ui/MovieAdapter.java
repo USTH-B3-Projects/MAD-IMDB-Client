@@ -37,8 +37,7 @@ final class MovieAdapter extends BaseAdapter {
         View row = recycled == null ? LayoutInflater.from(activity).inflate(R.layout.item_movie, parent, false) : recycled;
         if (recycled == null) {
             Ui.fonts(row);
-            if (home) row.setPadding(Ui.dp(activity, 20), 0, Ui.dp(activity, 20), 0);
-            if (compact) {
+            if (home) row.setPadding(Ui.dp(activity, 20), 0, Ui.dp(activity, 20), Ui.dp(activity, 10));            if (compact) {
                 ImageView poster = row.findViewById(R.id.poster);
                 ViewGroup.LayoutParams params = poster.getLayoutParams();
                 params.width = Ui.dp(activity, 54); params.height = Ui.dp(activity, 80);

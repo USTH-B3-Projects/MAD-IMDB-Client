@@ -37,7 +37,8 @@ See [Run locally in the README](../README.md#run-locally) for the JDK, the TMDB 
 
 Behavior per screen (Home, Search, Details, Favourites, Settings, state handling) is described in [Behavior and Data in the README](../README.md#behavior-and-data). Implementation notes specific to the design:
  
-- Home's showcase uses the original ViewPager with adjacent posters and page indicators.
+- Home's showcase uses the original ViewPager with adjacent posters and page indicators. The centred poster is full size and the side posters are scaled down with a fixed gap. The showcase advances automatically (4s per movie, 0.7s slide) and pauses while the user drags it or Home is not on screen. 
+- Home shows two discover cards under "More to discover". "See all" swaps them for the pagninated movie list and "Hide" swaps them back; the choice survives rotation.
 - In Favourites, the selection action footer replaces the bottom navigation, and feedback cannot cover the removal controls.
 - A simple XML launch background replaces the design's animated launch concept.
 
