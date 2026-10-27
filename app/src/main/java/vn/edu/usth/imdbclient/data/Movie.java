@@ -37,17 +37,23 @@ public class Movie {
         double rating = json.optDouble("vote_average", 0);
         movie.voteAverage = Double.isFinite(rating) ? Math.max(0, Math.min(10, rating)) : 0;
         JSONArray genres = json.optJSONArray("genres");
-        if (genres != null) movie.genres = names(genres, "name", 8);
+        if (genres != null) {
+            movie.genres = names(genres, "name", 8);
+        }
         JSONObject credits = json.optJSONObject("credits");
         if (credits != null) {
             movie.cast = names(credits.optJSONArray("cast"), "name", 12);
             JSONArray crew = credits.optJSONArray("crew");
             List<String> directors = new ArrayList<>();
-            if (crew != null) for (int i = 0; i < crew.length(); i++) {
-                JSONObject person = crew.optJSONObject(i);
-                if (person != null && "Director".equals(person.optString("job"))) {
-                    String name = text(person, "name");
-                    if (!name.isEmpty()) directors.add(name);
+            if (crew != null) {
+                for (int i = 0; i < crew.length(); i++) {
+                    JSONObject person = crew.optJSONObject(i);
+                    if (person != null && "Director".equals(person.optString("job"))) {
+                        String name = text(person, "name");
+                        if (!name.isEmpty()) {
+                            directors.add(name);
+                        }
+                    }
                 }
             }
             movie.director = String.join(", ", directors);
@@ -61,15 +67,25 @@ public class Movie {
 
     private static String names(JSONArray list, String field, int limit) {
         List<String> names = new ArrayList<>();
-        if (list != null) for (int i = 0; i < Math.min(limit, list.length()); i++) {
-            JSONObject item = list.optJSONObject(i);
-            if (item != null && !text(item, field).isEmpty()) names.add(text(item, field));
+        if (list != null) {
+            for (int i = 0; i < Math.min(limit, list.length()); i++) {
+                JSONObject item = list.optJSONObject(i);
+                if (item != null && !text(item, field).isEmpty()) {
+                    names.add(text(item, field));
+                }
+            }
         }
         return String.join(", ", names);
     }
 
-    public String year() { return releaseDate != null && releaseDate.length() >= 4 ? releaseDate.substring(0, 4) : ""; }
-    public String rating() { return String.format(Locale.getDefault(), "%.1f", voteAverage); }
+    public String year() {
+        return releaseDate != null && releaseDate.length() >= 4 ? releaseDate.substring(0, 4) : "";
+    }
+
+    public String rating() {
+        return String.format(Locale.getDefault(), "%.1f", voteAverage);
+    }
+
     public String imageUrl(boolean backdrop) {
         String path = backdrop ? backdropPath : posterPath;
         return path != null && path.startsWith("/") ? "https://image.tmdb.org/t/p/" + (backdrop ? "w780" : "w500") + path : "";

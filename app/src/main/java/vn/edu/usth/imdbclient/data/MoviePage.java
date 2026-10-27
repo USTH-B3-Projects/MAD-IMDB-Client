@@ -22,9 +22,13 @@ public final class MoviePage {
         List<Movie> movies = new ArrayList<>();
         for (int i = 0; i < results.length(); i++) {
             JSONObject item = results.optJSONObject(i);
-            if (item == null) continue;
+            if (item == null) {
+                continue;
+            }
             Movie movie = Movie.fromJson(item);
-            if (movie.id > 0 && !movie.title.isEmpty()) movies.add(movie);
+            if (movie.id > 0 && !movie.title.isEmpty()) {
+                movies.add(movie);
+            }
         }
         return new MoviePage(movies, Math.max(1, json.optInt("page", 1)), json.optInt("total_pages", 1));
     }

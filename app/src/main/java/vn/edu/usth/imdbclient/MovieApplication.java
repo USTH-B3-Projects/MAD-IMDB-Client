@@ -15,7 +15,8 @@ public class MovieApplication extends Application {
     public MovieDataSource repository;
     public ImageLoader images;
 
-    @Override public void onCreate() {
+    @Override
+    public void onCreate() {
         super.onCreate();
         RequestQueue queue = Volley.newRequestQueue(this);
         FavoriteDatabase database = Room.databaseBuilder(this, FavoriteDatabase.class, "favorites.db")
@@ -23,11 +24,21 @@ public class MovieApplication extends Application {
         repository = new MovieRepository(queue, database.favorites());
         int cacheSize = (int) Math.min(Runtime.getRuntime().maxMemory() / 8, 24 * 1024 * 1024);
         LruCache<String, Bitmap> cache = new LruCache<String, Bitmap>(cacheSize) {
-            @Override protected int sizeOf(String key, Bitmap value) { return value.getByteCount(); }
+            @Override
+            protected int sizeOf(String key, Bitmap value) {
+                return value.getByteCount();
+            }
         };
         images = new ImageLoader(queue, new ImageLoader.ImageCache() {
-            @Override public Bitmap getBitmap(String key) { return cache.get(key); }
-            @Override public void putBitmap(String key, Bitmap value) { cache.put(key, value); }
+            @Override
+            public Bitmap getBitmap(String key) {
+                return cache.get(key);
+            }
+
+            @Override
+            public void putBitmap(String key, Bitmap value) {
+                cache.put(key, value);
+            }
         });
     }
 }
