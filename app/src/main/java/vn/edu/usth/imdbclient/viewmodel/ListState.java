@@ -23,15 +23,33 @@ public final class ListState {
         this.page = page;
         this.totalPages = totalPages;
     }
-    public static ListState empty() { return new ListState(Collections.emptyList(), false, null, 0, 1); }
-    public ListState loading() { return new ListState(movies, true, null, page, totalPages); }
-    public ListState failed(Failure failure) { return new ListState(movies, false, failure, page, totalPages); }
+    public static ListState empty() {
+        return new ListState(Collections.emptyList(), false, null, 0, 1);
+    }
+
+    public ListState loading() {
+        return new ListState(movies, true, null, page, totalPages);
+    }
+
+    public ListState failed(Failure failure) {
+        return new ListState(movies, false, failure, page, totalPages);
+    }
+
     public ListState received(MoviePage response) {
         List<Movie> merged = new ArrayList<>(movies);
         Set<Integer> ids = new HashSet<>();
-        for (Movie movie : merged) ids.add(movie.id);
-        for (Movie movie : response.movies) if (ids.add(movie.id)) merged.add(movie);
+        for (Movie movie : merged) {
+            ids.add(movie.id);
+        }
+        for (Movie movie : response.movies) {
+            if (ids.add(movie.id)) {
+                merged.add(movie);
+            }
+        }
         return new ListState(merged, false, null, response.page, response.totalPages);
     }
-    public boolean hasMore() { return page < totalPages; }
+
+    public boolean hasMore() {
+        return page < totalPages;
+    }
 }
