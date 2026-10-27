@@ -13,10 +13,25 @@ import vn.edu.usth.imdbclient.data.Movie;
 final class FeaturedAdapter extends PagerAdapter {
     private final MainActivity activity;
     private final List<Movie> movies;
-    FeaturedAdapter(MainActivity activity, List<Movie> movies) { this.activity = activity; this.movies = movies; }
-    @Override public int getCount() { return movies.size() > 1 ? movies.size() + 2 : movies.size(); }
-    int movieIndex(int position) { return movies.size() > 1 ? (position + movies.size() - 1) % movies.size() : 0; }
-    @Override public boolean isViewFromObject(@NonNull View view, @NonNull Object object) { return view == object; }
+
+    FeaturedAdapter(MainActivity activity, List<Movie> movies) {
+        this.activity = activity;
+        this.movies = movies;
+    }
+
+    @Override
+    public int getCount() {
+        return movies.size() > 1 ? movies.size() + 2 : movies.size();
+    }
+
+    int movieIndex(int position) {
+        return movies.size() > 1 ? (position + movies.size() - 1) % movies.size() : 0;
+    }
+
+    @Override
+    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+        return view == object;
+    }
     @NonNull @Override public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view = LayoutInflater.from(activity).inflate(R.layout.item_featured, container, false);
         Movie movie = movies.get(movieIndex(position));

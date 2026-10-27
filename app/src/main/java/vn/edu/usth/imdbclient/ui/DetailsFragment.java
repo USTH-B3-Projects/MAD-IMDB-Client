@@ -12,18 +12,29 @@ import vn.edu.usth.imdbclient.data.Movie;
 
 public class DetailsFragment extends ScreenFragment {
     private int movieId;
-    public DetailsFragment() { super(R.layout.fragment_details); }
+
+    public DetailsFragment() {
+        super(R.layout.fragment_details);
+    }
+
     static DetailsFragment create(int id) {
         DetailsFragment fragment = new DetailsFragment();
-        Bundle arguments = new Bundle(); arguments.putInt("id", id); fragment.setArguments(arguments); return fragment;
+        Bundle arguments = new Bundle();
+        arguments.putInt("id", id);
+        fragment.setArguments(arguments);
+        return fragment;
     }
-    @Override public void onViewCreated(@NonNull View root, @Nullable Bundle bundle) {
+
+    @Override
+    public void onViewCreated(@NonNull View root, @Nullable Bundle bundle) {
         super.onViewCreated(root, bundle);
         movieId = requireArguments().getInt("id");
         root.findViewById(R.id.detail_back).setOnClickListener(v -> host().onBackPressed());
         root.findViewById(R.id.detail_favorite).setOnClickListener(v -> addFavorite());
         model.detail.observe(getViewLifecycleOwner(), movie -> {
-            if (movie != null && movie.id == movieId) bind(root, movie);
+            if (movie != null && movie.id == movieId) {
+                bind(root, movie);
+            }
         });
         model.detailLoading.observe(getViewLifecycleOwner(), loading -> {
             root.findViewById(R.id.loading_panel).setVisibility(loading ? View.VISIBLE : View.GONE);
@@ -33,13 +44,16 @@ public class DetailsFragment extends ScreenFragment {
             }
         });
         model.detailError.observe(getViewLifecycleOwner(), error -> {
-            if (error != null) Ui.error(root, error, () -> model.loadDetails(movieId, true));
+            if (error != null) {
+                Ui.error(root, error, () -> model.loadDetails(movieId, true));
+            }
         });
         model.favorites.observe(getViewLifecycleOwner(), movies -> favoriteButton(root));
         model.favoritesError.observe(getViewLifecycleOwner(), error -> favoriteButton(root));
         model.busyIds.observe(getViewLifecycleOwner(), ids -> favoriteButton(root));
         model.loadDetails(movieId, false);
     }
+
     private void bind(View root, Movie movie) {
         root.findViewById(R.id.state_panel).setVisibility(View.GONE);
         root.findViewById(R.id.detail_scroll).setVisibility(View.VISIBLE);
@@ -47,7 +61,9 @@ public class DetailsFragment extends ScreenFragment {
         String[] genres = Ui.available(requireContext(), movie.genres).split(", ");
         Ui.text(root, R.id.detail_genres, genres[0]);
         root.findViewById(R.id.detail_genres_second).setVisibility(genres.length > 1 ? View.VISIBLE : View.GONE);
-        if (genres.length > 1) Ui.text(root, R.id.detail_genres_second, genres[1]);
+        if (genres.length > 1) {
+            Ui.text(root, R.id.detail_genres_second, genres[1]);
+        }
         Ui.text(root, R.id.detail_date, getString(R.string.release_date) + ": " + Ui.available(requireContext(), movie.releaseDate));
         Ui.text(root, R.id.detail_runtime, movie.runtime > 0 ? getString(R.string.runtime, movie.runtime) : getString(R.string.not_available));
         Ui.text(root, R.id.detail_rating, getString(R.string.rating_value, movie.rating()));
@@ -59,13 +75,20 @@ public class DetailsFragment extends ScreenFragment {
         favoriteButton(root);
         Integer savedId = model.saved.get("detailScrollId");
         Integer scroll = model.saved.get("detailScroll");
-        if (savedId != null && savedId == movieId && scroll != null) root.findViewById(R.id.detail_scroll).post(() -> {
-            if (getView() != null) ((ScrollView) root.findViewById(R.id.detail_scroll)).scrollTo(0, scroll);
-        });
+        if (savedId != null && savedId == movieId && scroll != null) {
+            root.findViewById(R.id.detail_scroll).post(() -> {
+                if (getView() != null) {
+                    ((ScrollView) root.findViewById(R.id.detail_scroll)).scrollTo(0, scroll);
+                }
+            });
+        }
     }
+
     private void addFavorite() {
         Movie movie = model.detail.getValue();
-        if (movie != null && movie.id == movieId && !model.isFavorite(movieId)) model.addFavorite(movie);
+        if (movie != null && movie.id == movieId && !model.isFavorite(movieId)) {
+            model.addFavorite(movie);
+        }
     }
     private void favoriteButton(View root) {
         boolean saved = model.isFavorite(movieId);

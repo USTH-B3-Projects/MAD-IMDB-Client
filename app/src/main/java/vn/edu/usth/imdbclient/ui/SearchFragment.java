@@ -28,26 +28,41 @@ public class SearchFragment extends ScreenFragment {
     private MovieAdapter adapter;
     private Button footer;
     private boolean restored;
-    public SearchFragment() { super(R.layout.fragment_search); }
-    @Override public void onViewCreated(@NonNull View root, @Nullable Bundle bundle) {
+
+    public SearchFragment() {
+        super(R.layout.fragment_search);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View root, @Nullable Bundle bundle) {
         super.onViewCreated(root, bundle);
         query = root.findViewById(R.id.query);
         query.setText(model.query());
         query.setSelection(query.length());
         watcher = new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 restored = false;
                 model.saved.set("searchScroll", null);
                 model.setQuery(s.toString());
             }
-            @Override public void afterTextChanged(Editable s) { }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         };
         query.addTextChangedListener(watcher);
         query.setOnEditorActionListener((text, action, event) -> {
-            if (action != EditorInfo.IME_ACTION_SEARCH) return false;
+            if (action != EditorInfo.IME_ACTION_SEARCH) {
+                return false;
+            }
             model.saveQueryToHistory();
-            host().hideKeyboard(); return true;
+            host().hideKeyboard();
+            return true;
         });
         root.findViewById(R.id.clear_query).setOnClickListener(v -> query.setText(""));
         list = root.findViewById(R.id.movie_list);
@@ -59,9 +74,15 @@ public class SearchFragment extends ScreenFragment {
         adapter = new MovieAdapter(host(), model, false, true, false);
         list.setAdapter(adapter);
         list.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override public void onScrollStateChanged(AbsListView view, int state) { }
-            @Override public void onScroll(AbsListView view, int first, int count, int total) {
-                if (count > 0 && first + count >= total - 2) model.loadMore(false, false);
+            @Override
+            public void onScrollStateChanged(AbsListView view, int state) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int first, int count, int total) {
+                if (count > 0 && first + count >= total - 2) {
+                    model.loadMore(false, false);
+                }
             }
         });
         model.search.observe(getViewLifecycleOwner(), state -> render(root, state));
@@ -69,6 +90,7 @@ public class SearchFragment extends ScreenFragment {
         model.favoritesError.observe(getViewLifecycleOwner(), error -> adapter.notifyDataSetChanged());
         model.busyIds.observe(getViewLifecycleOwner(), ids -> adapter.notifyDataSetChanged());
     }
+
     private void render(View root, ListState state) {
         boolean idle = model.query().isEmpty();
         boolean empty = state.movies.isEmpty();
@@ -87,26 +109,37 @@ public class SearchFragment extends ScreenFragment {
             List<String> values = recent.isEmpty() ? Arrays.asList(getResources().getStringArray(R.array.default_suggestions)) : recent;
             heading.setText(recent.isEmpty() ? R.string.suggestions : R.string.recent_searches);
             suggestions.setAdapter(new ArrayAdapter<String>(requireContext(), R.layout.item_suggestion, values) {
-                @NonNull @Override public View getView(int position, @Nullable View recycled, @NonNull android.view.ViewGroup parent) {
-                    View view = super.getView(position, recycled, parent); Ui.fonts(view); return view;
+                @NonNull
+                @Override
+                public View getView(int position, @Nullable View recycled, @NonNull android.view.ViewGroup parent) {
+                    View view = super.getView(position, recycled, parent);
+                    Ui.fonts(view);
+                    return view;
                 }
             });
             suggestions.setOnItemClickListener((parent, view, position, id) -> {
-                query.setText(values.get(position)); query.setSelection(query.length());
-                model.saveQueryToHistory(); host().hideKeyboard();
+                query.setText(values.get(position));
+                query.setSelection(query.length());
+                model.saveQueryToHistory();
+                host().hideKeyboard();
             });
             return;
         }
         heading.setText(R.string.results);
-        if (empty && state.error != null) Ui.error(root, state.error, () -> model.loadMore(false, true));
-        else if (empty && !state.loading) Ui.state(root, R.string.empty_search, R.string.empty_search_body, R.attr.movieStateSearch, 0, null);
+        if (empty && state.error != null) {
+            Ui.error(root, state.error, () -> model.loadMore(false, true));
+        } else if (empty && !state.loading) {
+            Ui.state(root, R.string.empty_search, R.string.empty_search_body, R.attr.movieStateSearch, 0, null);
+        }
         adapter.submit(state.movies);
         footer.setVisibility(state.hasMore() ? View.VISIBLE : View.GONE);
         footer.setEnabled(!state.loading);
         footer.setText(state.loading ? R.string.loading : state.error != null ? R.string.retry : R.string.more);
         if (!empty && !restored) {
             Parcelable scroll = model.saved.get("searchScroll");
-            if (scroll != null) list.onRestoreInstanceState(scroll);
+            if (scroll != null) {
+                list.onRestoreInstanceState(scroll);
+            }
             restored = true;
         }
     }

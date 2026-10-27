@@ -8,8 +8,12 @@ import androidx.annotation.Nullable;
 import vn.edu.usth.imdbclient.R;
 
 public class SettingsFragment extends ScreenFragment {
-    public SettingsFragment() { super(R.layout.fragment_settings); }
-    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle bundle) {
+    public SettingsFragment() {
+        super(R.layout.fragment_settings);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle bundle) {
         super.onViewCreated(view, bundle);
         boolean dark = model.preferences.getBoolean("dark", false);
         view.findViewById(R.id.appearance_light).setBackgroundResource(dark ? R.drawable.appearance_light : R.drawable.appearance_selected_light);

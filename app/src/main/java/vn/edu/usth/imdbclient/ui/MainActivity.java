@@ -98,7 +98,11 @@ public class MainActivity extends AppCompatActivity {
                     .start();
             bar.announceForAccessibility(getString(message));
         });
-        if (state == null) showTab(tab); else updateNavigation();
+        if (state == null) {
+            showTab(tab);
+        } else {
+            updateNavigation();
+        }
     }
 
     public void showTab(String destination) {
@@ -110,43 +114,67 @@ public class MainActivity extends AppCompatActivity {
         boolean same = destination.equals(tab) && current != null && !(current instanceof DetailsFragment) && !(current instanceof AboutFragment);
         tab = destination;
         model.saved.set("tab", tab);
-        if (!"favorites".equals(tab)) model.feedback.setValue(null);
+        if (!"favorites".equals(tab)) {
+            model.feedback.setValue(null);
+        }
         if (!same) {
-            Fragment screen = "search".equals(tab) ? new SearchFragment() : "favorites".equals(tab)
-                                                                            ? new FavoritesFragment() : "settings".equals(tab) ? new SettingsFragment() : new HomeFragment();
+            Fragment screen;
+            if ("search".equals(tab)) {
+                screen = new SearchFragment();
+            } else if ("favorites".equals(tab)) {
+                screen = new FavoritesFragment();
+            } else if ("settings".equals(tab)) {
+                screen = new SettingsFragment();
+            } else {
+                screen = new HomeFragment();
+            }
             manager.beginTransaction().replace(R.id.screen_container, screen).commit();
         }
         updateNavigation();
     }
+
     public void openMovie(Movie movie) {
-        if ("search".equals(tab)) model.saveQueryToHistory();
+        if ("search".equals(tab)) {
+            model.saveQueryToHistory();
+        }
         hideKeyboard();
         model.loadDetails(movie.id, false);
         getSupportFragmentManager().beginTransaction().replace(R.id.screen_container, DetailsFragment.create(movie.id)).addToBackStack("details").commit();
     }
+
     public void openAbout() {
         getSupportFragmentManager().beginTransaction().replace(R.id.screen_container, new AboutFragment()).addToBackStack("about").commit();
     }
+
     public void changeAppearance(boolean dark) {
-        if (model.preferences.getBoolean("dark", false) == dark) return;
+        if (model.preferences.getBoolean("dark", false) == dark) {
+            return;
+        }
         model.preferences.edit().putBoolean("dark", dark).apply();
         recreate();
     }
+
     public void selectionMode(boolean selecting) {
         findViewById(R.id.bottom_navigation).setVisibility(selecting ? View.GONE : View.VISIBLE);
         FrameLayout.LayoutParams bar = (FrameLayout.LayoutParams) findViewById(R.id.feedback_bar).getLayoutParams();
         bar.bottomMargin = Ui.dp(this, selecting ? 88 : 16);
         findViewById(R.id.feedback_bar).setLayoutParams(bar);
     }
+
     public void confirmation(boolean visible) {
         findViewById(R.id.confirmation).setVisibility(visible ? View.VISIBLE : View.GONE);
         int importance = visible ? View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS : View.IMPORTANT_FOR_ACCESSIBILITY_AUTO;
         findViewById(R.id.screen_container).setImportantForAccessibility(importance);
         findViewById(R.id.bottom_navigation).setImportantForAccessibility(importance);
         findViewById(R.id.bottom_navigation).setEnabled(!visible);
-        for (int id : new int[]{R.id.nav_home, R.id.nav_search, R.id.nav_favorites, R.id.nav_settings}) findViewById(id).setEnabled(!visible);
-        if (visible) findViewById(R.id.confirmation_cancel).requestFocus();
+        for (int id : new int[]{R.id.nav_home, R.id.nav_search, R.id.nav_favorites, R.id.nav_settings}) {
+            findViewById(id).setEnabled(!visible);
+        }
+        if (visible) {
+            findViewById(R.id.confirmation_cancel).requestFocus();
+        }
     }
+
     public void hideKeyboard() {
         View focused = getCurrentFocus();
         if (focused != null) {
@@ -154,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
             focused.clearFocus();
         }
     }
+
     private void updateNavigation() {
         int[] icons = {R.id.nav_icon_home, R.id.nav_icon_search, R.id.nav_icon_favorites, R.id.nav_icon_settings};
         int[] labels = {R.id.nav_label_home, R.id.nav_label_search, R.id.nav_label_favorites, R.id.nav_label_settings};
@@ -170,11 +199,21 @@ public class MainActivity extends AppCompatActivity {
             ((View) image.getParent()).setSelected(selected);
         }
     }
-    @Override public void onBackPressed() {
-        if (findViewById(R.id.confirmation).getVisibility() == View.VISIBLE) { confirmation(false); return; }
+
+    @Override
+    public void onBackPressed() {
+        if (findViewById(R.id.confirmation).getVisibility() == View.VISIBLE) {
+            confirmation(false);
+            return;
+        }
         Fragment current = getSupportFragmentManager().findFragmentById(R.id.screen_container);
-        if (current instanceof FavoritesFragment && ((FavoritesFragment) current).cancelSelection()) return;
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0 && !"home".equals(tab)) { showTab("home"); return; }
+        if (current instanceof FavoritesFragment && ((FavoritesFragment) current).cancelSelection()) {
+            return;
+        }
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0 && !"home".equals(tab)) {
+            showTab("home");
+            return;
+        }
         super.onBackPressed();
     }
 }
